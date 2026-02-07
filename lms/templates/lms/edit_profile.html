@@ -1,0 +1,68 @@
+{% extends 'lms/base.html' %}
+
+{% block title %}Edit Profile - Manac LMS Portal{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <h2>Edit Profile</h2>
+</div>
+<div style="background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-top: 20px; max-width: 800px;">
+    <form method="post" id="edit-profile-form">
+        {% csrf_token %}
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px;">First Name</label>
+                <input type="text" name="first_name" value="{{ user.first_name }}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" required>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px;">Last Name</label>
+                <input type="text" name="last_name" value="{{ user.last_name }}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px;">Email</label>
+                <input type="email" name="email" value="{{ user.email }}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" disabled>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px;">Phone</label>
+                <input type="tel" name="phone" value="{{ student.phone }}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px;">Address</label>
+            <textarea name="address" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" rows="3">{{ student.address }}</textarea>
+        </div>
+        <button type="submit" style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">Save Changes</button>
+    </form>
+</div>
+
+{% block extra_js %}
+<script>
+document.getElementById('edit-profile-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+
+    fetch('{% url "lms:edit_profile" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            window.location.reload();
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}

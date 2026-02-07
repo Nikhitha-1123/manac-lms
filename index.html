@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manac LMS Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <button class="menu-toggle" id="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <h2><i class="fas fa-graduation-cap"></i> Manac LMS Portal</h2>
+        </div>
+        <div class="header-right">
+            <div class="notification-icon" id="notification-icon">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">3</span>
+            </div>
+            <div class="profile-section" id="profile-section">
+                <div class="profile-avatar">N</div>
+                <span>Nikhitha</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="profile-dropdown" id="profile-dropdown">
+                <a href="#" id="my-profile"><i class="fas fa-user"></i> My Profile</a>
+                <a href="#" id="edit-profile"><i class="fas fa-edit"></i> Edit Profile</a>
+                <a href="#" id="change-password"><i class="fas fa-lock"></i> Change Password</a>
+                <a href="#" id="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="sidebar">
+            <ul>
+                <li data-tooltip="Dashboard"><a href="#" class="active"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+                <li data-tooltip="Offer Letter"><a href="#"><i class="fas fa-file-contract"></i> <span>Offer Letter</span></a></li>
+                <li data-tooltip="Session Details"><a href="#"><i class="fas fa-calendar-alt"></i> <span>Session Details</span></a></li>
+                <li data-tooltip="Session Recordings"><a href="#"><i class="fas fa-video"></i> <span>Session Recordings</span></a></li>
+                <li data-tooltip="Attendance"><a href="#"><i class="fas fa-user-check"></i> <span>Attendance</span></a></li>
+                <li data-tooltip="Project Details"><a href="#"><i class="fas fa-project-diagram"></i> <span>Project Details</span></a></li>
+                <li data-tooltip="Assessment"><a href="#"><i class="fas fa-clipboard-check"></i> <span>Assessment</span></a></li>
+                <li data-tooltip="Study Material"><a href="#"><i class="fas fa-book"></i> <span>Study Material</span></a></li>
+                <li data-tooltip="Certificate"><a href="#"><i class="fas fa-certificate"></i> <span>Certificate</span></a></li>
+                <li data-tooltip="Placement Readiness"><a href="#"><i class="fas fa-chart-line"></i> <span>Placement Readiness</span></a></li>
+            </ul>
+        </div>
+        
+        <div class="main-content" id="main-content">
+            <!-- Content will be loaded dynamically -->
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Profile dropdown
+            const profileSection = document.getElementById('profile-section');
+            const profileDropdown = document.getElementById('profile-dropdown');
+            
+            profileSection.addEventListener('click', function(e) {
+                e.stopPropagation();
+                console.log('Profile clicked!');
+                console.log('Current display:', profileDropdown.style.display);
+                if (profileDropdown.style.display === 'block') {
+                    profileDropdown.style.display = 'none';
+                } else {
+                    profileDropdown.style.display = 'block';
+                }
+                console.log('New display:', profileDropdown.style.display);
+            });
+            
+            document.addEventListener('click', function() {
+                profileDropdown.style.display = 'none';
+            });
+            
+            // Profile dropdown links
+            document.getElementById('my-profile').addEventListener('click', function(e) {
+                e.preventDefault();
+                lmsPortal.loadPage('profile');
+                profileDropdown.style.display = 'none';
+            });
+            
+            document.getElementById('edit-profile').addEventListener('click', function(e) {
+                e.preventDefault();
+                lmsPortal.loadPage('edit-profile');
+                profileDropdown.style.display = 'none';
+            });
+            
+            document.getElementById('change-password').addEventListener('click', function(e) {
+                e.preventDefault();
+                lmsPortal.loadPage('change-password');
+                profileDropdown.style.display = 'none';
+            });
+            
+            document.getElementById('logout').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Logged out successfully!');
+                profileDropdown.style.display = 'none';
+            });
+            
+            // Menu toggle
+            document.getElementById('menu-toggle').addEventListener('click', function() {
+                const sidebar = document.querySelector('.sidebar');
+                const mainContent = document.querySelector('.main-content');
+                sidebar.classList.toggle('hidden');
+                mainContent.classList.toggle('expanded');
+                setupTooltips();
+            });
+            
+            // Setup tooltips function
+            function setupTooltips() {
+                const sidebar = document.querySelector('.sidebar');
+                let tooltip = document.getElementById('custom-tooltip');
+                
+                if (tooltip) {
+                    tooltip.remove();
+                }
+                
+                if (sidebar.classList.contains('hidden')) {
+                    tooltip = document.createElement('div');
+                    tooltip.id = 'custom-tooltip';
+                    tooltip.style.cssText = `
+                        position: fixed;
+                        background: rgba(0,0,0,0.9);
+                        color: white;
+                        padding: 8px 12px;
+                        border-radius: 6px;
+                        font-size: 0.9rem;
+                        z-index: 99999;
+                        display: none;
+                        pointer-events: none;
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                    `;
+                    document.body.appendChild(tooltip);
+
+                    document.querySelectorAll('.sidebar ul li').forEach(item => {
+                        item.addEventListener('mouseenter', function(e) {
+                            const tooltipText = item.getAttribute('data-tooltip');
+                            const rect = item.getBoundingClientRect();
+                            
+                            tooltip.textContent = tooltipText;
+                            tooltip.style.display = 'block';
+                            tooltip.style.left = (rect.right + 10) + 'px';
+                            tooltip.style.top = (rect.top + rect.height / 2 - 15) + 'px';
+                        });
+                        
+                        item.addEventListener('mouseleave', function() {
+                            tooltip.style.display = 'none';
+                        });
+                    });
+                }
+            }
+            
+            // Sidebar navigation
+            document.querySelectorAll('.sidebar a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.querySelectorAll('.sidebar a').forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    const page = this.textContent.trim().toLowerCase().replace(/\s+/g, '-');
+                    lmsPortal.loadPage(page);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

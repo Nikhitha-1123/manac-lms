@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Manac LMS Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe, #00f2fe);
+            background-size: 400% 400%;
+            animation: gradientShift 10s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 25% 25%, rgba(102, 126, 234, 0.4) 0%, transparent 50%),
+                        radial-gradient(circle at 75% 75%, rgba(240, 147, 251, 0.4) 0%, transparent 50%),
+                        radial-gradient(circle at 50% 10%, rgba(79, 172, 254, 0.4) 0%, transparent 50%),
+                        radial-gradient(circle at 10% 90%, rgba(0, 242, 254, 0.4) 0%, transparent 50%);
+            animation: floatingBubbles 15s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes floatingBubbles {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            33% { transform: translateY(-30px) rotate(120deg); }
+            66% { transform: translateY(30px) rotate(240deg); }
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            animation: loginShine 3s infinite;
+        }
+
+        @keyframes loginShine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-header .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb, #f5576c);
+            background-size: 300% 300%;
+            animation: logoGlow 3s ease infinite;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4), 0 0 0 4px rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes logoGlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .login-header .logo i {
+            font-size: 32px;
+            color: white;
+        }
+
+        .login-header h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .form-group input::placeholder {
+            color: #aaa;
+        }
+
+        .btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .error-message {
+            background: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(220, 53, 69, 0.2);
+            font-size: 0.9rem;
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .login-footer p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .login-footer a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .login-footer a:hover {
+            color: #764ba2;
+        }
+
+        .demo-credentials {
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 1.5rem;
+        }
+
+        .demo-credentials h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .demo-credentials p {
+            color: #555;
+            font-size: 0.85rem;
+            margin: 5px 0;
+        }
+
+        .demo-credentials strong {
+            color: #333;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                margin: 1rem;
+                padding: 2rem;
+            }
+
+            .login-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h1>Manac LMS</h1>
+            <p>Welcome back! Please sign in to continue</p>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="error-message">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="demo-credentials">
+            <h4><i class="fas fa-info-circle"></i> Demo Credentials</h4>
+            <p><strong>Username:</strong> testuser</p>
+            <p><strong>Password:</strong> test123</p>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+
+            <button type="submit" class="btn">
+                <i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i>
+                Sign In
+            </button>
+        </form>
+
+        <div class="login-footer">
+            <p>Don't have an account? <a href="#">Contact Administrator</a></p>
+            <p>&copy; 2024 Manac Infotech Pvt Ltd. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        // Add some interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input');
+
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'translateY(-2px)';
+                });
+
+                input.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Auto-fill demo credentials on click
+            document.querySelector('.demo-credentials').addEventListener('click', function() {
+                document.getElementById('username').value = 'testuser';
+                document.getElementById('password').value = 'test123';
+            });
+        });
+    </script>
+</body>
+</html>

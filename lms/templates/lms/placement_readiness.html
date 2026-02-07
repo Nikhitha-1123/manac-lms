@@ -1,0 +1,118 @@
+{% extends 'lms/base.html' %}
+
+{% block title %}Placement Readiness - Manac LMS Portal{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <h2>Placement Readiness</h2>
+    <p style="color: #7f8c8d;">Track your preparation progress and readiness for placements</p>
+</div>
+
+<!-- Readiness Score -->
+<div class="card" style="text-align: center; margin-bottom: 2rem;">
+    <h3><i class="fas fa-chart-line" style="color: #28a745;"></i> Overall Readiness Score</h3>
+    <div style="font-size: 4rem; font-weight: 900; color: #28a745; margin: 1rem 0;">{{ readiness_score }}%</div>
+    <div style="width: 100%; height: 20px; background: rgba(0,0,0,0.1); border-radius: 10px; overflow: hidden; margin: 1rem 0;">
+        <div style="width: {{ readiness_score }}%; height: 100%; background: linear-gradient(90deg, #28a745, #20c997); border-radius: 10px; transition: width 1s ease;"></div>
+    </div>
+    <p style="color: #666; margin-top: 1rem;">Keep practicing to improve your score!</p>
+</div>
+
+<div class="dashboard-grid">
+    <!-- Checklist -->
+    <div class="card">
+        <h3><i class="fas fa-check-square" style="color: #007bff;"></i> Preparation Checklist</h3>
+        <div style="display: grid; gap: 15px;">
+            {% for item in checklist %}
+            <div style="display: flex; align-items: center; padding: 15px; border: 1px solid #e0e0e0; border-radius: 10px; background: {% if item.completed %}#e8f5e9{% else %}#fff3cd{% endif %};">
+                <div style="width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; {% if item.completed %}background: #28a745; color: white;{% else %}background: #ffc107; color: white;{% endif %}">
+                    {% if item.completed %}
+                    <i class="fas fa-check"></i>
+                    {% else %}
+                    <i class="fas fa-clock"></i>
+                    {% endif %}
+                </div>
+                <div>
+                    <h4 style="margin: 0; color: #333;">{{ item.item }}</h4>
+                    <small style="color: {% if item.completed %}#28a745{% else %}#856404{% endif %};">{% if item.completed %}Completed{% else %}Pending{% endif %}</small>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Mock Interviews -->
+    <div class="card">
+        <h3><i class="fas fa-user-tie" style="color: #dc3545;"></i> Mock Interviews</h3>
+        <div style="display: grid; gap: 15px;">
+            {% for interview in mock_interviews %}
+            <div style="display: flex; align-items: center; padding: 15px; border: 1px solid #e0e0e0; border-radius: 10px; background: {% if interview.status == 'completed' %}#e8f5e9{% else %}#d1ecf1{% endif %};">
+                <div style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; {% if interview.status == 'completed' %}background: #28a745; color: white;{% else %}background: #17a2b8; color: white;{% endif %}">
+                    <i class="fas fa-{% if interview.status == 'completed' %}check{% else %}calendar{% endif %}"></i>
+                </div>
+                <div style="flex: 1;">
+                    <h4 style="margin: 0 0 5px 0; color: #333;">{{ interview.title }}</h4>
+                    <p style="margin: 0; color: #666; font-size: 0.9em;">{{ interview.date }}</p>
+                    {% if interview.feedback %}
+                    <p style="margin: 5px 0 0 0; color: #555; font-size: 0.9em;"><strong>Feedback:</strong> {{ interview.feedback }}</p>
+                    {% endif %}
+                </div>
+                <div style="text-align: right;">
+                    <span style="padding: 5px 10px; border-radius: 15px; font-size: 0.8em; font-weight: bold; {% if interview.status == 'completed' %}background: #28a745; color: white;{% else %}background: #17a2b8; color: white;{% endif %}">{{ interview.status|title }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Mock Tests -->
+<div class="card">
+    <h3><i class="fas fa-brain" style="color: #6f42c1;"></i> Mock Tests</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+        {% for test in mock_tests %}
+        <div style="padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px; background: {% if test.score %}#f8f9fa{% else %}#fff3cd{% endif %};">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h4 style="margin: 0; color: #333;">{{ test.title }}</h4>
+                {% if test.score %}
+                <div style="font-size: 1.5rem; font-weight: bold; color: {% if test.score >= 80 %}#28a745{% elif test.score >= 60 %}#ffc107{% else %}#dc3545{% endif %};">{{ test.score }}%</div>
+                {% else %}
+                <span style="padding: 5px 10px; border-radius: 15px; font-size: 0.8em; font-weight: bold; background: #ffc107; color: #856404;">{{ test.status|title }}</span>
+                {% endif %}
+            </div>
+            {% if test.date %}
+            <p style="margin: 0; color: #666; font-size: 0.9em;"><i class="far fa-calendar"></i> {{ test.date }}</p>
+            {% endif %}
+            {% if test.score %}
+            <div style="width: 100%; height: 8px; background: rgba(0,0,0,0.1); border-radius: 4px; overflow: hidden; margin-top: 10px;">
+                <div style="width: {{ test.score }}%; height: 100%; background: {% if test.score >= 80 %}#28a745{% elif test.score >= 60 %}#ffc107{% else %}#dc3545{% endif %}; border-radius: 4px;"></div>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Tips Section -->
+<div class="card">
+    <h3><i class="fas fa-lightbulb" style="color: #fd7e14;"></i> Placement Preparation Tips</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+        <div style="padding: 15px; background: #e3f2fd; border-radius: 10px;">
+            <h4 style="margin: 0 0 10px 0; color: #1976d2;"><i class="fas fa-code"></i> Technical Skills</h4>
+            <p style="margin: 0; color: #555; font-size: 0.9em;">Focus on data structures, algorithms, and system design. Practice coding problems daily.</p>
+        </div>
+        <div style="padding: 15px; background: #f3e5f5; border-radius: 10px;">
+            <h4 style="margin: 0 0 10px 0; color: #7b1fa2;"><i class="fas fa-users"></i> Communication</h4>
+            <p style="margin: 0; color: #555; font-size: 0.9em;">Work on verbal communication and presentation skills. Practice explaining concepts clearly.</p>
+        </div>
+        <div style="padding: 15px; background: #e8f5e9; border-radius: 10px;">
+            <h4 style="margin: 0 0 10px 0; color: #388e3c;"><i class="fas fa-project-diagram"></i> Projects</h4>
+            <p style="margin: 0; color: #555; font-size: 0.9em;">Build real-world projects and maintain an active GitHub profile. Showcase your work effectively.</p>
+        </div>
+        <div style="padding: 15px; background: #fff3e0; border-radius: 10px;">
+            <h4 style="margin: 0 0 10px 0; color: #f57c00;"><i class="fas fa-brain"></i> Aptitude</h4>
+            <p style="margin: 0; color: #555; font-size: 0.9em;">Practice quantitative aptitude, logical reasoning, and verbal ability regularly.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

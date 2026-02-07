@@ -1,0 +1,75 @@
+{% extends 'lms/base.html' %}
+
+{% block title %}Attendance Record - Manac LMS Portal{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <h2>Attendance Record</h2>
+</div>
+<div class="dashboard-grid">
+    <div class="card">
+        <div class="card-icon blue">
+            <i class="fas fa-calendar-alt"></i>
+        </div>
+        <h3>{{ total_sessions }}</h3>
+        <p>Total Sessions</p>
+    </div>
+    <div class="card">
+        <div class="card-icon green">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h3>{{ present_count }}</h3>
+        <p>Present</p>
+    </div>
+    <div class="card">
+        <div class="card-icon red">
+            <i class="fas fa-times-circle"></i>
+        </div>
+        <h3>{{ absent_count }}</h3>
+        <p>Absent</p>
+    </div>
+    <div class="card">
+        <div class="card-icon orange">
+            <i class="fas fa-percentage"></i>
+        </div>
+        <h3>{{ attendance_rate }}%</h3>
+        <p>Attendance Rate</p>
+    </div>
+</div>
+
+<div class="table-container">
+    <div class="table-header">
+        <h3>Detailed History</h3>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Session Topic</th>
+                <th>Time</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for attendance in attendances %}
+            <tr>
+                <td>{{ attendance.session.date|date:"M d, Y" }}</td>
+                <td>{{ attendance.session.title }}</td>
+                <td>{{ attendance.session.start_time|time:"H:i" }} - {{ attendance.session.end_time|time:"H:i" }}</td>
+                <td>
+                    {% if attendance.is_present %}
+                        <span class="status-badge status-present">Present</span>
+                    {% else %}
+                        <span class="status-badge status-absent">Absent</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align: center; color: #666;">No attendance records found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends 'lms/base.html' %}
+
+{% block title %}Certificates - Manac LMS Portal{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <h2>Certificates</h2>
+</div>
+<div style="margin-top: 20px;">
+    {% if certificates %}
+        {% for certificate in certificates %}
+        <div style="background: #fff; border-radius: 12px; padding: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; border: 15px solid #f8f9fa; position: relative; max-width: 900px; margin: 0 auto 30px auto;">
+
+            <!-- Decorative Elements -->
+            <div style="position: absolute; top: 0; left: 0; width: 0; height: 0; border-top: 100px solid #ffc107; border-right: 100px solid transparent;"></div>
+            <div style="position: absolute; bottom: 0; right: 0; width: 0; height: 0; border-bottom: 100px solid #007bff; border-left: 100px solid transparent;"></div>
+
+            <div style="margin-bottom: 30px;">
+                <div style="width: 100px; height: 100px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                    <i class="fas fa-award" style="font-size: 50px; color: #ffc107;"></i>
+                </div>
+            </div>
+
+            <h1 style="font-family: serif; color: #2c3e50; margin: 0 0 10px 0; font-size: 42px; letter-spacing: 2px;">CERTIFICATE</h1>
+            <p style="color: #888; font-size: 16px; text-transform: uppercase; letter-spacing: 3px; margin: 0 0 40px 0;">Of Completion</p>
+
+            <p style="color: #555; font-size: 18px; margin: 0;">This certificate is proudly presented to</p>
+            <h2 style="font-size: 36px; color: #007bff; margin: 20px 0; font-family: sans-serif; font-weight: 700;">{{ certificate.student.full_name }}</h2>
+
+            <p style="color: #555; font-size: 18px; margin: 0 0 20px 0; line-height: 1.6;">For successfully completing the comprehensive training course on</p>
+            <h3 style="font-size: 28px; color: #333; margin: 0 0 50px 0;">{{ certificate.title }}</h3>
+
+            <div style="display: flex; justify-content: space-around; align-items: flex-end; margin-top: 50px;">
+                <div style="text-align: center;">
+                    <div style="font-family: cursive; font-size: 24px; color: #333; margin-bottom: 10px;">{{ certificate.issued_date|date:"M d, Y" }}</div>
+                    <div style="border-top: 1px solid #ccc; padding-top: 10px; width: 200px; margin: 0 auto; color: #888; font-size: 14px;">Date</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-family: cursive; font-size: 24px; color: #333; margin-bottom: 10px;">Manac Director</div>
+                    <div style="border-top: 1px solid #ccc; padding-top: 10px; width: 200px; margin: 0 auto; color: #888; font-size: 14px;">Signature</div>
+                </div>
+            </div>
+
+        </div>
+        {% endfor %}
+
+        <div style="margin-top: 30px; text-align: center; display: flex; justify-content: center; gap: 20px;">
+            <button style="background: #007bff; color: white; border: none; padding: 12px 30px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 6px rgba(0,123,255,0.2);">
+                <i class="fas fa-download"></i> Download PDF
+            </button>
+            <button style="background: #fff; color: #333; border: 1px solid #ddd; padding: 12px 30px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 10px;">
+                <i class="fab fa-linkedin"></i> Share on LinkedIn
+            </button>
+        </div>
+    {% else %}
+        <div style="background: #fff; border-radius: 12px; padding: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; max-width: 600px; margin: 0 auto;">
+            <i class="fas fa-certificate" style="font-size: 60px; color: #ffc107; margin-bottom: 20px;"></i>
+            <h3 style="color: #2c3e50; margin-bottom: 10px;">No Certificates Yet</h3>
+            <p style="color: #666; margin: 0;">Complete your training program to earn certificates.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Manac LMS Portal{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <button class="menu-toggle" id="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <h2><i class="fas fa-graduation-cap"></i> Manac LMS Portal</h2>
+        </div>
+        <div class="header-right">
+            <div class="notification-icon" id="notification-icon">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">{{ notifications|length }}</span>
+            </div>
+            <div class="profile-section" id="profile-section">
+                <div class="profile-avatar">{{ user.first_name|first|default:'U' }}</div>
+                <span>{{ user.first_name|default:'User' }}</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="profile-dropdown" id="profile-dropdown">
+                <a href="{% url 'lms:profile' %}" id="my-profile"><i class="fas fa-user"></i> My Profile</a>
+                <a href="{% url 'lms:edit_profile' %}" id="edit-profile"><i class="fas fa-edit"></i> Edit Profile</a>
+                <a href="{% url 'lms:change_password' %}" id="change-password"><i class="fas fa-lock"></i> Change Password</a>
+                <a href="{% url 'lms:logout' %}" id="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <ul>
+                <li data-tooltip="Dashboard"><a href="{% url 'lms:dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+                <li data-tooltip="Offer Letter"><a href="{% url 'lms:offer_letter' %}"><i class="fas fa-file-contract"></i> <span>Offer Letter</span></a></li>
+                <li data-tooltip="Session Details"><a href="{% url 'lms:session_details' %}"><i class="fas fa-calendar-alt"></i> <span>Session Details</span></a></li>
+                <li data-tooltip="Session Recordings"><a href="{% url 'lms:session_recordings' %}"><i class="fas fa-video"></i> <span>Session Recordings</span></a></li>
+                <li data-tooltip="Attendance"><a href="{% url 'lms:attendance' %}"><i class="fas fa-user-check"></i> <span>Attendance</span></a></li>
+                <li data-tooltip="Project Details"><a href="{% url 'lms:project_details' %}"><i class="fas fa-project-diagram"></i> <span>Project Details</span></a></li>
+                <li data-tooltip="Assessment"><a href="{% url 'lms:assessment' %}"><i class="fas fa-clipboard-check"></i> <span>Assessment</span></a></li>
+                <li data-tooltip="Study Material"><a href="{% url 'lms:study_material' %}"><i class="fas fa-book"></i> <span>Study Material</span></a></li>
+                <li data-tooltip="Certificate"><a href="{% url 'lms:certificate' %}"><i class="fas fa-certificate"></i> <span>Certificate</span></a></li>
+                <li data-tooltip="Placement Readiness"><a href="{% url 'lms:placement_readiness' %}"><i class="fas fa-chart-line"></i> <span>Placement Readiness</span></a></li>
+            </ul>
+        </div>
+
+        <div class="main-content" id="main-content">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+    <script src="{% static 'js/script.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

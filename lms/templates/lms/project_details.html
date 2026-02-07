@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details - Manac LMS Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe, #00f2fe);
+            background-size: 400% 400%;
+            animation: gradientShift 10s ease infinite;
+            min-height: 100vh;
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 25% 25%, rgba(102, 126, 234, 0.4) 0%, transparent 50%),
+                        radial-gradient(circle at 75% 75%, rgba(240, 147, 251, 0.4) 0%, transparent 50%),
+                        radial-gradient(circle at 50% 10%, rgba(79, 172, 254, 0.4) 0%, transparent 50%),
+                        radial-gradient(circle at 10% 90%, rgba(0, 242, 254, 0.4) 0%, transparent 50%);
+            animation: floatingBubbles 15s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes floatingBubbles {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            33% { transform: translateY(-30px) rotate(120deg); }
+            66% { transform: translateY(30px) rotate(240deg); }
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-top: none;
+            color: #333;
+            padding: 1rem 2rem;
+            z-index: 1000;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header h2 {
+            margin: 0;
+            font-weight: 700;
+            color: #333;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .menu-toggle {
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 50%, #45b7d1 100%);
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 12px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            transform: translateZ(0);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-toggle:hover {
+            transform: translateY(-2px) scale(1.05) rotate(5deg);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .notification-icon {
+            position: relative;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .notification-icon:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .notification-icon i {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            position: relative;
+            padding: 8px 16px;
+            border-radius: 25px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .profile-section:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.2) 100%);
+            transform: translateY(-1px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #feca57, #ff9ff3);
+            background-size: 300% 300%;
+            animation: avatarGlow 2s ease infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4), 0 0 0 2px rgba(255, 255, 255, 0.3);
+            transform: translateZ(0);
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes avatarGlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .profile-dropdown {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+            display: none;
+            z-index: 99999;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+        }
+
+        .profile-dropdown.show {
+            display: block;
+        }
+
+        .profile-dropdown a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            color: #333;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-dropdown a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .profile-dropdown a:hover::before {
+            left: 100%;
+        }
+
+        .profile-dropdown a:hover {
+            background: linear-gradient(135deg, rgba(144, 202, 249, 0.2), rgba(165, 214, 167, 0.2));
+            transform: translateX(5px);
+        }
+
+        .profile-dropdown a:last-child {
+            border-bottom: none;
+        }
+
+        .profile-dropdown a i {
+            width: 16px;
+            text-align: center;
+        }
+
+        .sidebar {
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            position: relative;
+            padding-top: 0;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255, 107, 107, 0.15), rgba(78, 205, 196, 0.15), rgba(69, 183, 209, 0.15), rgba(254, 202, 87, 0.15), rgba(255, 159, 243, 0.15));
+            background-size: 300% 300%;
+            animation: sidebarGlow 6s ease infinite;
+            pointer-events: none;
+        }
+
+        @keyframes sidebarGlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .sidebar.hidden {
+            width: 60px;
+            transform: translateX(0);
+        }
+
+        .sidebar.hidden ul li a {
+            padding: 16px 8px;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .sidebar.hidden ul li a span {
+            display: none;
+        }
+
+        .sidebar.hidden ul li a i {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .sidebar ul li {
+            margin: 8px 16px;
+            position: relative;
+        }
+
+        .sidebar ul li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            border-radius: 15px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar ul li a:hover, .sidebar ul li a.active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(8px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            color: #fff;
+        }
+
+        .sidebar ul li a i {
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar ul li a:hover i {
+            transform: scale(1.2) rotate(10deg);
+            color: #4ecdc4;
+        }
+
+        .main-content {
+            margin-left: 0;
+            margin-top: 70px;
+            padding: 2rem;
+            flex: 1;
+            transition: margin-left 0.3s ease;
+            min-height: calc(100vh - 70px);
+            z-index: 1;
+            position: relative;
+        }
+
+        .main-content.expanded {
+            margin-left: 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            height: fit-content;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            z-index: 10;
+        }
+
+        .card h3 {
+            color: #333;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .project-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .project-status {
+            background: #fff3cd;
+            color: #856404;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .project-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .project-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #888;
+            font-size: 14px;
+        }
+
+        .project-links {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .project-link {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .project-link:hover {
+            background: #0056b3;
+            transform: translateY(-1px);
+        }
+
+        .project-link.secondary {
+            background: #6c757d;
+        }
+
+        .project-link.secondary:hover {
+            background: #545b62;
+        }
+
+        .content-header {
+            margin-bottom: 30px;
+        }
+
+        .content-header h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .submit-project-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+            margin-bottom: 30px;
+        }
+
+        .submit-project-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(40, 167, 69, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .header h2 {
+                font-size: 1.2rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .project-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .project-meta {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .project-links {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <button class="menu-toggle" id="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <h2><i class="fas fa-graduation-cap"></i> Manac LMS Portal</h2>
+        </div>
+        <div class="header-right">
+            <div class="notification-icon" id="notification-icon">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">3</span>
+            </div>
+            <div class="profile-section" id="profile-section">
+                <div class="profile-avatar">{{ user.get_full_name|slice:":1"|upper|default:user.username|slice:":1"|upper }}</div>
+                <span>{{ user.get_full_name|default:user.username }}</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="profile-dropdown" id="profile-dropdown">
+                <a href="{% url 'lms:profile' %}" id="my-profile"><i class="fas fa-user"></i> My Profile</a>
+                <a href="{% url 'lms:edit_profile' %}" id="edit-profile"><i class="fas fa-edit"></i> Edit Profile</a>
+                <a href="{% url 'lms:change_password' %}" id="change-password"><i class="fas fa-lock"></i> Change Password</a>
+                <a href="{% url 'lms:logout' %}" id="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <ul>
+                <li data-tooltip="Dashboard"><a href="{% url 'lms:dashboard' %}"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+                <li data-tooltip="Offer Letter"><a href="{% url 'lms:offer_letter' %}"><i class="fas fa-file-contract"></i> <span>Offer Letter</span></a></li>
+                <li data-tooltip="Session Details"><a href="{% url 'lms:session_details' %}"><i class="fas fa-calendar-alt"></i> <span>Session Details</span></a></li>
+                <li data-tooltip="Session Recordings"><a href="{% url 'lms:session_recordings' %}"><i class="fas fa-video"></i> <span>Session Recordings</span></a></li>
+                <li data-tooltip="Attendance"><a href="{% url 'lms:attendance' %}"><i class="fas fa-user-check"></i> <span>Attendance</span></a></li>
+                <li data-tooltip="Project Details"><a href="{% url 'lms:project_details' %}" class="active"><i class="fas fa-project-diagram"></i> <span>Project Details</span></a></li>
+                <li data-tooltip="Assessment"><a href="{% url 'lms:assessment' %}"><i class="fas fa-clipboard-check"></i> <span>Assessment</span></a></li>
+                <li data-tooltip="Study Material"><a href="{% url 'lms:study_material' %}"><i class="fas fa-book"></i> <span>Study Material</span></a></li>
+                <li data-tooltip="Certificate"><a href="{% url 'lms:certificate' %}"><i class="fas fa-certificate"></i> <span>Certificate</span></a></li>
+                <li data-tooltip="Placement Readiness"><a href="{% url 'lms:placement_readiness' %}"><i class="fas fa-chart-line"></i> <span>Placement Readiness</span></a></li>
+            </ul>
+        </div>
+
+        <div class="main-content" id="main-content">
+            <div class="content-header">
+                <h2>Project Details</h2>
+                <p style="color: #7f8c8d;">Track your project submissions and progress</p>
+            </div>
+
+            <button class="submit-project-btn" onclick="openSubmitModal()">
+                <i class="fas fa-plus"></i> Submit New Project
+            </button>
+
+            <div class="card">
+                <h3><i class="fas fa-project-diagram" style="color: #6f42c1;"></i> My Projects</h3>
+                <div class="project-grid">
+                    {% for project in projects %}
+                    <div class="project-card">
+                        <div class="project-header">
+                            <h4 class="project-title">{{ project.title }}</h4>
+                            <span class="project-status">Submitted</span>
+                        </div>
+                        <p class="project-description">{{ project.description|truncatechars:150 }}</p>
+                        <div class="project-meta">
+                            <span class="meta-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                Submitted: {{ project.submitted_at|date:"M d, Y" }}
+                            </span>
+                            {% if project.github_url %}
+                            <span class="meta-item">
+                                <i class="fab fa-github"></i>
+                                GitHub Available
+                            </span>
+                            {% endif %}
+                            {% if project.live_demo_url %}
+                            <span class="meta-item">
+                                <i class="fas fa-globe"></i>
+                                Live Demo Available
+                            </span>
+                            {% endif %}
+                        </div>
+                        <div class="project-links">
+                            {% if project.github_url %}
+                            <a href="{{ project.github_url }}" target="_blank" class="project-link">
+                                <i class="fab fa-github"></i> View Code
+                            </a>
+                            {% endif %}
+                            {% if project.live_demo_url %}
+                            <a href="{{ project.live_demo_url }}" target="_blank" class="project-link secondary">
+                                <i class="fas fa-external-link-alt"></i> Live Demo
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 60px; color: #666;">
+                        <i class="fas fa-project-diagram" style="font-size: 64px; color: #ddd; margin-bottom: 20px;"></i>
+                        <h3>No Projects Submitted</h3>
+                        <p>You haven't submitted any projects yet. Click the "Submit New Project" button to get started.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Submit Project Modal -->
+    <div id="submit-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; backdrop-filter: blur(5px);">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-radius: 20px; padding: 30px; width: 90%; max-width: 500px; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+            <h3 style="margin-bottom: 20px; color: #333;">Submit New Project</h3>
+            <form id="project-form">
+                {% csrf_token %}
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #555;">Project Title</label>
+                    <input type="text" id="project-title" required style="width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 8px; font-size: 14px;">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #555;">Description</label>
+                    <textarea id="project-description" rows="4" style="width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 8px; font-size: 14px; resize: vertical;"></textarea>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #555;">GitHub Repository URL</label>
+                    <input type="url" id="github-url" placeholder="https://github.com/username/repo" style="width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 8px; font-size: 14px;">
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #555;">Live Demo URL</label>
+                    <input type="url" id="demo-url" placeholder="https://myproject.com" style="width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 8px; font-size: 14px;">
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button type="button" onclick="closeSubmitModal()" style="background: #6c757d; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer;">Cancel</button>
+                    <button type="submit" style="background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer;">Submit Project</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Profile dropdown
+            const profileSection = document.getElementById('profile-section');
+            const profileDropdown = document.getElementById('profile-dropdown');
+
+            profileSection.addEventListener('click', function(e) {
+                e.stopPropagation();
+                profileDropdown.classList.toggle('show');
+            });
+
+            document.addEventListener('click', function() {
+                profileDropdown.classList.remove('show');
+            });
+
+            // Menu toggle
+            document.getElementById('menu-toggle').addEventListener('click', function() {
+                const sidebar = document.querySelector('.sidebar');
+                const mainContent = document.querySelector('.main-content');
+                sidebar.classList.toggle('hidden');
+                mainContent.classList.toggle('expanded');
+            });
+
+            // Sidebar navigation
+            document.querySelectorAll('.sidebar a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.querySelectorAll('.sidebar a').forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    window.location.href = this.href;
+                });
+            });
+
+            // Project form submission
+            document.getElementById('project-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const title = document.getElementById('project-title').value;
+                const description = document.getElementById('project-description').value;
+                const githubUrl = document.getElementById('github-url').value;
+                const demoUrl = document.getElementById('demo-url').value;
+
+                fetch('{% url "lms:submit_project" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: JSON.stringify({
+                        title: title,
+                        description: description,
+                        github_url: githubUrl,
+                        live_demo_url: demoUrl
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Project submitted successfully!');
+                        closeSubmitModal();
+                        location.reload();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while submitting the project.');
+                });
+            });
+        });
+
+        function openSubmitModal() {
+            document.getElementById('submit-modal').style.display = 'block';
+        }
+
+        function closeSubmitModal() {
+            document.getElementById('submit-modal').style.display = 'none';
+            document.getElementById('project-form').reset();
+        }
+    </script>
+</body>
+</html>

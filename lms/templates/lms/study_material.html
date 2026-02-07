@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Material - Manac LMS Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe, #00f2fe);
+            background-size: 400% 400%;
+            animation: gradientShift 10s ease infinite;
+            min-height: 100vh;
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 25% 25%, rgba(102, 126, 234, 0.4) 0%, transparent 50%),
+                        radial-gradient(circle at 75% 75%, rgba(240, 147, 251, 0.4) 0%, transparent 50%),
+                        radial-gradient(circle at 50% 10%, rgba(79, 172, 254, 0.4) 0%, transparent 50%),
+                        radial-gradient(circle at 10% 90%, rgba(0, 242, 254, 0.4) 0%, transparent 50%);
+            animation: floatingBubbles 15s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes floatingBubbles {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            33% { transform: translateY(-30px) rotate(120deg); }
+            66% { transform: translateY(30px) rotate(240deg); }
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-top: none;
+            color: #333;
+            padding: 1rem 2rem;
+            z-index: 1000;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header h2 {
+            margin: 0;
+            font-weight: 700;
+            color: #333;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .menu-toggle {
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 50%, #45b7d1 100%);
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 12px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            transform: translateZ(0);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-toggle:hover {
+            transform: translateY(-2px) scale(1.05) rotate(5deg);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .notification-icon {
+            position: relative;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .notification-icon:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .notification-icon i {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            position: relative;
+            padding: 8px 16px;
+            border-radius: 25px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .profile-section:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.2) 100%);
+            transform: translateY(-1px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #feca57, #ff9ff3);
+            background-size: 300% 300%;
+            animation: avatarGlow 2s ease infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4), 0 0 0 2px rgba(255, 255, 255, 0.3);
+            transform: translateZ(0);
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes avatarGlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .profile-dropdown {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+            display: none;
+            z-index: 99999;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+        }
+
+        .profile-dropdown.show {
+            display: block;
+        }
+
+        .profile-dropdown a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            color: #333;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-dropdown a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .profile-dropdown a:hover::before {
+            left: 100%;
+        }
+
+        .profile-dropdown a:hover {
+            background: linear-gradient(135deg, rgba(144, 202, 249, 0.2), rgba(165, 214, 167, 0.2));
+            transform: translateX(5px);
+        }
+
+        .profile-dropdown a:last-child {
+            border-bottom: none;
+        }
+
+        .profile-dropdown a i {
+            width: 16px;
+            text-align: center;
+        }
+
+        .sidebar {
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            position: relative;
+            padding-top: 0;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255, 107, 107, 0.15), rgba(78, 205, 196, 0.15), rgba(69, 183, 209, 0.15), rgba(254, 202, 87, 0.15), rgba(255, 159, 243, 0.15));
+            background-size: 300% 300%;
+            animation: sidebarGlow 6s ease infinite;
+            pointer-events: none;
+        }
+
+        @keyframes sidebarGlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .sidebar.hidden {
+            width: 60px;
+            transform: translateX(0);
+        }
+
+        .sidebar.hidden ul li a {
+            padding: 16px 8px;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .sidebar.hidden ul li a span {
+            display: none;
+        }
+
+        .sidebar.hidden ul li a i {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .sidebar ul li {
+            margin: 8px 16px;
+            position: relative;
+        }
+
+        .sidebar ul li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            border-radius: 15px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar ul li a:hover, .sidebar ul li a.active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(8px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            color: #fff;
+        }
+
+        .sidebar ul li a i {
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar ul li a:hover i {
+            transform: scale(1.2) rotate(10deg);
+            color: #4ecdc4;
+        }
+
+        .main-content {
+            margin-left: 0;
+            margin-top: 70px;
+            padding: 2rem;
+            flex: 1;
+            transition: margin-left 0.3s ease;
+            min-height: calc(100vh - 70px);
+            z-index: 1;
+            position: relative;
+        }
+
+        .main-content.expanded {
+            margin-left: 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            height: fit-content;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            z-index: 10;
+        }
+
+        .card h3 {
+            color: #333;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-filter {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-input i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+
+        .search-input input {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .search-input input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .filter-select {
+            padding: 12px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            min-width: 150px;
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .material-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .material-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .material-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .material-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(135deg, #dc3545, #ff6b6b);
+        }
+
+        .material-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .material-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .material-pdf {
+            background: linear-gradient(135deg, #fff5f5, #ffeaea);
+            color: #dc3545;
+        }
+
+        .material-zip {
+            background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+            color: #28a745;
+        }
+
+        .material-epub {
+            background: linear-gradient(135deg, #fff3e0, #fff8e1);
+            color: #ffc107;
+        }
+
+        .material-ppt {
+            background: linear-gradient(135deg, #e0f7fa, #e1f5fe);
+            color: #17a2b8;
+        }
+
+        .material-type {
+            background: #eee;
+            color: #555;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .material-title {
+            margin: 0 0 8px 0;
+            font-size: 18px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .material-description {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+            margin: 0 0 20px 0;
+        }
+
+        .material-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 15px;
+        }
+
+        .material-meta {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .download-btn {
+            background: rgba(255, 255, 255, 0.9);
+            color: #007bff;
+            border: 1px solid #007bff;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .download-btn:hover {
+            background: #007bff;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .content-header {
+            margin-bottom: 30px;
+        }
+
+        .content-header h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .header h2 {
+                font-size: 1.2rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .material-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-filter {
+                flex-direction: column;
+            }
+
+            .search-input {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <button class="menu-toggle" id="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <h2><i class="fas fa-graduation-cap"></i> Manac LMS Portal</h2>
+        </div>
+        <div class="header-right">
+            <div class="notification-icon" id="notification-icon">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">3</span>
+            </div>
+            <div class="profile-section" id="profile-section">
+                <div class="profile-avatar">{{ user.get_full_name|slice:":1"|upper|default:user.username|slice:":1"|upper }}</div>
+                <span>{{ user.get_full_name|default:user.username }}</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="profile-dropdown" id="profile-dropdown">
+                <a href="{% url 'lms:profile' %}" id="my-profile"><i class="fas fa-user"></i> My Profile</a>
+                <a href="{% url 'lms:edit_profile' %}" id="edit-profile"><i class="fas fa-edit"></i> Edit Profile</a>
+                <a href="{% url 'lms:change_password' %}" id="change-password"><i class="fas fa-lock"></i> Change Password</a>
+                <a href="{% url 'lms:logout' %}" id="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <ul>
+                <li data-tooltip="Dashboard"><a href="{% url 'lms:dashboard' %}"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+                <li data-tooltip="Offer Letter"><a href="{% url 'lms:offer_letter' %}"><i class="fas fa-file-contract"></i> <span>Offer Letter</span></a></li>
+                <li data-tooltip="Session Details"><a href="{% url 'lms:session_details' %}"><i class="fas fa-calendar-alt"></i> <span>Session Details</span></a></li>
+                <li data-tooltip="Session Recordings"><a href="{% url 'lms:session_recordings' %}"><i class="fas fa-video"></i> <span>Session Recordings</span></a></li>
+                <li data-tooltip="Attendance"><a href="{% url 'lms:attendance' %}"><i class="fas fa-user-check"></i> <span>Attendance</span></a></li>
+                <li data-tooltip="Project Details"><a href="{% url 'lms:project_details' %}"><i class="fas fa-project-diagram"></i> <span>Project Details</span></a></li>
+                <li data-tooltip="Assessment"><a href="{% url 'lms:assessment' %}"><i class="fas fa-clipboard-check"></i> <span>Assessment</span></a></li>
+                <li data-tooltip="Study Material"><a href="{% url 'lms:study_material' %}" class="active"><i class="fas fa-book"></i> <span>Study Material</span></a></li>
+                <li data-tooltip="Certificate"><a href="{% url 'lms:certificate' %}"><i class="fas fa-certificate"></i> <span>Certificate</span></a></li>
+                <li data-tooltip="Placement Readiness"><a href="{% url 'lms:placement_readiness' %}"><i class="fas fa-chart-line"></i> <span>Placement Readiness</span></a></li>
+            </ul>
+        </div>
+
+        <div class="main-content" id="main-content">
+            <div class="content-header">
+                <h2>Study Material</h2>
+                <p style="color: #7f8c8d;">Access learning resources and study materials</p>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="search-filter">
+                <div class="search-input">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search resources..." id="search-input">
+                </div>
+                <select class="filter-select" id="type-filter">
+                    <option value="">All Types</option>
+                    <option value="pdf">PDF Guides</option>
+                    <option value="zip">Source Code</option>
+                    <option value="epub">E-Books</option>
+                    <option value="ppt">Presentations</option>
+                </select>
+            </div>
+
+            <!-- Materials Grid -->
+            <div class="material-grid" id="materials-container">
+                {% for material in materials %}
+                <div class="material-card" data-type="{{ material.file_type }}">
+                    <div class="material-header">
+                        <div class="material-icon material-{{ material.file_type|lower }}">
+                            {% if material.file_type == 'PDF' %}
+                                <i class="fas fa-file-pdf"></i>
+                            {% elif material.file_type == 'ZIP' %}
+                                <i class="fas fa-file-code"></i>
+                            {% elif material.file_type == 'EPUB' %}
+                                <i class="fas fa-book"></i>
+                            {% elif material.file_type == 'PPT' %}
+                                <i class="fas fa-file-powerpoint"></i>
+                            {% else %}
+                                <i class="fas fa-file"></i>
+                            {% endif %}
+                        </div>
+                        <span class="material-type">{{ material.file_type }}</span>
+                    </div>
+                    <h4 class="material-title">{{ material.title }}</h4>
+                    <p class="material-description">{{ material.description|truncatechars:120 }}</p>
+                    <div class="material-footer">
+                        <div class="material-meta">
+                            {{ material.file_size }} • {{ material.uploaded_at|date:"M d, Y" }}
+                        </div>
+                        <a href="{{ material.file.url }}" class="download-btn" download>
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+                {% empty %}
+                <div style="grid-column: 1 / -1; text-align: center; padding: 60px; color: #666;">
+                    <i class="fas fa-book" style="font-size: 64px; color: #ddd; margin-bottom: 20px;"></i>
+                    <h3>No Study Materials</h3>
+                    <p>Study materials will be uploaded by instructors soon.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Profile dropdown
+            const profileSection = document.getElementById('profile-section');
+            const profileDropdown = document.getElementById('profile-dropdown');
+
+            profileSection.addEventListener('click', function(e) {
+                e.stopPropagation();
+                profileDropdown.classList.toggle('show');
+            });
+
+            document.addEventListener('click', function() {
+                profileDropdown.classList.remove('show');
+            });
+
+            // Menu toggle
+            document.getElementById('menu-toggle').addEventListener('click', function() {
+                const sidebar = document.querySelector('.sidebar');
+                const mainContent = document.querySelector('.main-content');
+                sidebar.classList.toggle('hidden');
+                mainContent.classList.toggle('expanded');
+            });
+
+            // Sidebar navigation
+            document.querySelectorAll('.sidebar a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.querySelectorAll('.sidebar a').forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    window.location.href = this.href;
+                });
+            });
+
+            // Search functionality
+            const searchInput = document.getElementById('search-input');
+            const typeFilter = document.getElementById('type-filter');
+            const materialsContainer = document.getElementById('materials-container');
+
+            function filterMaterials() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const selectedType = typeFilter.value.toLowerCase();
+                const cards = materialsContainer.querySelectorAll('.material-card');
+
+                cards.forEach(card => {
+                    const title = card.querySelector('.material-title').textContent.toLowerCase();
+                    const description = card.querySelector('.material-description').textContent.toLowerCase();
+                    const type = card.dataset.type.toLowerCase();
+
+                    const matchesSearch = title.includes(searchTerm) || description.includes(searchTerm);
+                    const matchesType = !selectedType || type === selectedType;
+
+                    if (matchesSearch && matchesType) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+
+            searchInput.addEventListener('input', filterMaterials);
+            typeFilter.addEventListener('change', filterMaterials);
+        });
+    </script>
+</body>
+</html>
