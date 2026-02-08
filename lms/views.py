@@ -223,9 +223,22 @@ def edit_profile(request):
     student = get_object_or_404(Student, user=request.user)
 
     if request.method == 'POST':
-        student.full_name = request.POST.get('first_name', '') + ' ' + request.POST.get('last_name', '').strip()
+        # Update user fields
+        request.user.first_name = request.POST.get('first_name', request.user.first_name)
+        request.user.last_name = request.POST.get('last_name', request.user.last_name)
+        request.user.save()
+
+        # Update student fields
+        student.full_name = request.user.get_full_name()
         student.phone = request.POST.get('phone', student.phone)
+        student.date_of_birth = request.POST.get('date_of_birth') or None
         student.address = request.POST.get('address', student.address)
+        student.college = request.POST.get('college', student.college)
+        student.branch = request.POST.get('branch', student.branch)
+        student.year = request.POST.get('year', student.year)
+        student.linkedin_profile = request.POST.get('linkedin_profile', student.linkedin_profile)
+        student.github_profile = request.POST.get('github_profile', student.github_profile)
+        student.portfolio = request.POST.get('portfolio', student.portfolio)
         student.save()
         return JsonResponse({'success': True, 'message': 'Profile updated successfully!'})
 

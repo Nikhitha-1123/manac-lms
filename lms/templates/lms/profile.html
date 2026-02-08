@@ -1,0 +1,84 @@
+{% extends 'lms/base.html' %}
+
+{% block title %}My Profile - Manac LMS Portal{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <h2>My Profile</h2>
+</div>
+<div style="background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-top: 20px; max-width: 800px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Full Name</label>
+            <p style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; background: #f9f9f9;">{{ student.full_name }}</p>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Email</label>
+            <p style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; background: #f9f9f9;">{{ user.email }}</p>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Phone</label>
+            <p style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; background: #f9f9f9;">{{ student.phone|default:"Not provided" }}</p>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Date of Birth</label>
+            <p style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; background: #f9f9f9;">{{ student.date_of_birth|date:"M d, Y"|default:"Not provided" }}</p>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">College</label>
+            <p style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; background: #f9f9f9;">{{ student.college|default:"Not provided" }}</p>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Branch</label>
+            <p style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; background: #f9f9f9;">{{ student.branch|default:"Not provided" }}</p>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Year</label>
+            <p style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; background: #f9f9f9;">{{ student.year|default:"Not provided" }}</p>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Enrollment Date</label>
+            <p style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; background: #f9f9f9;">{{ student.enrollment_date|date:"M d, Y" }}</p>
+        </div>
+    </div>
+    <div style="margin-bottom: 15px;">
+        <label style="display: block; margin-bottom: 5px; font-weight: bold;">Address</label>
+        <p style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; background: #f9f9f9;">{{ student.address|default:"Not provided" }}</p>
+    </div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">LinkedIn Profile</label>
+            <p style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; background: #f9f9f9;">
+                {% if student.linkedin_profile %}
+                    <a href="{{ student.linkedin_profile }}" target="_blank">{{ student.linkedin_profile }}</a>
+                {% else %}
+                    Not provided
+                {% endif %}
+            </p>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">GitHub Profile</label>
+            <p style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; background: #f9f9f9;">
+                {% if student.github_profile %}
+                    <a href="{{ student.github_profile }}" target="_blank">{{ student.github_profile }}</a>
+                {% else %}
+                    Not provided
+                {% endif %}
+            </p>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Portfolio</label>
+            <p style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; background: #f9f9f9;">
+                {% if student.portfolio %}
+                    <a href="{{ student.portfolio }}" target="_blank">{{ student.portfolio }}</a>
+                {% else %}
+                    Not provided
+                {% endif %}
+            </p>
+        </div>
+    </div>
+    <div style="margin-top: 20px;">
+        <a href="{% url 'lms:edit_profile' %}" style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; text-decoration: none; display: inline-block;">Edit Profile</a>
+    </div>
+</div>
+{% endblock %}

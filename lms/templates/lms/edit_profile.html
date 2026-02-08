@@ -26,10 +26,40 @@
                 <label style="display: block; margin-bottom: 5px;">Phone</label>
                 <input type="tel" name="phone" value="{{ student.phone }}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
             </div>
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px;">Date of Birth</label>
+                <input type="date" name="date_of_birth" value="{% if student.date_of_birth %}{{ student.date_of_birth|date:'Y-m-d' }}{% endif %}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px;">College</label>
+                <input type="text" name="college" value="{{ student.college }}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px;">Branch</label>
+                <input type="text" name="branch" value="{{ student.branch }}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px;">Year</label>
+                <input type="text" name="year" value="{{ student.year }}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
         </div>
         <div style="margin-bottom: 15px;">
             <label style="display: block; margin-bottom: 5px;">Address</label>
             <textarea name="address" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" rows="3">{{ student.address }}</textarea>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px;">LinkedIn Profile</label>
+                <input type="url" name="linkedin_profile" value="{{ student.linkedin_profile }}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px;">GitHub Profile</label>
+                <input type="url" name="github_profile" value="{{ student.github_profile }}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px;">Portfolio</label>
+                <input type="url" name="portfolio" value="{{ student.portfolio }}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
         </div>
         <button type="submit" style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">Save Changes</button>
     </form>
