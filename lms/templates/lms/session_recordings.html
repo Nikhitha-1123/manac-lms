@@ -469,6 +469,7 @@
             color: #667eea;
             transition: all 0.3s ease;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
         }
 
         .play-button:hover {
@@ -749,8 +750,8 @@
             <div class="recording-grid" id="recordings-container">
                 {% for recording in recordings %}
                 <div class="recording-card" data-topic="{{ recording.topic|lower }}">
-                    <div class="recording-thumbnail">
-                        <div class="play-button">
+                    <div class="recording-thumbnail" onclick="watchRecording('{{ recording.recording_url }}')">
+                        <div class="play-button" onclick="watchRecording('{{ recording.recording_url }}')">
                             <i class="fas fa-play"></i>
                         </div>
                         <div class="recording-duration">01:45:30</div>

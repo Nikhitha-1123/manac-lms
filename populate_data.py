@@ -35,6 +35,9 @@ student, created = Student.objects.get_or_create(
     }
 )
 
+# Clear existing sessions
+Session.objects.all().delete()
+
 # Create Sessions
 sessions_data = [
     {
@@ -45,7 +48,7 @@ sessions_data = [
         'start_time': time(10, 0),
         'end_time': time(11, 0),
         'is_completed': True,
-        'recording_url': 'https://example.com/recording1'
+        'recording_url': 'https://www.youtube.com/live/tpVgfaWiftA?si=0fbUVDctUS6vqxbr'
     },
     {
         'title': 'CSS Fundamentals',
@@ -55,7 +58,7 @@ sessions_data = [
         'start_time': time(10, 0),
         'end_time': time(11, 0),
         'is_completed': True,
-        'recording_url': 'https://example.com/recording2'
+        'recording_url': 'https://www.youtube.com/live/hcGnztmTeeo?si=7B7MLuIvszMVeKww'
     },
     {
         'title': 'JavaScript Basics',
@@ -65,7 +68,17 @@ sessions_data = [
         'start_time': time(10, 0),
         'end_time': time(11, 0),
         'is_completed': True,
-        'recording_url': 'https://example.com/recording3'
+        'recording_url': 'https://www.youtube.com/live/9rx43uKQYOA?si=dHoHWMHIIJzG7iw4'
+    },
+    {
+        'title': 'Introduction to React',
+        'topic': 'React Basics',
+        'mentor': 'Alice Brown',
+        'date': date.today() - timedelta(days=3),
+        'start_time': time(10, 0),
+        'end_time': time(11, 0),
+        'is_completed': True,
+        'recording_url': 'https://www.youtube.com/live/KwNU8LjEhSg?si=AazicjfLj_1Mh8F_'
     },
     {
         'title': 'React Components',
@@ -74,7 +87,18 @@ sessions_data = [
         'date': date.today() + timedelta(days=2),
         'start_time': time(10, 0),
         'end_time': time(11, 0),
-        'is_completed': False
+        'is_completed': False,
+        'recording_url': 'https://www.youtube.com/live/GPTceu7L7jQ?si=Y8LIUge-40BwEZZK'
+    },
+    {
+        'title': 'Advanced React Components',
+        'topic': 'Advanced React',
+        'mentor': 'Alice Brown',
+        'date': date.today() + timedelta(days=4),
+        'start_time': time(10, 0),
+        'end_time': time(11, 0),
+        'is_completed': False,
+        'recording_url': 'https://www.youtube.com/live/g9_3tnDJeX4?si=w00vk6VJCGpF6CHL'
     },
     {
         'title': 'Django Models',
@@ -83,16 +107,20 @@ sessions_data = [
         'date': date.today() + timedelta(days=5),
         'start_time': time(10, 0),
         'end_time': time(11, 0),
-        'is_completed': False
+        'is_completed': False,
+        'recording_url': 'https://www.youtube.com/live/_8MF7oY6TNk?si=qrNfXT92qtN0fOF5'
     }
 ]
 
 for session_data in sessions_data:
-    Session.objects.get_or_create(
+    session, created = Session.objects.get_or_create(
         title=session_data['title'],
         date=session_data['date'],
         defaults=session_data
     )
+    if not created:
+        session.recording_url = session_data['recording_url']
+        session.save()
 
 # Create Attendance for past sessions
 past_sessions = Session.objects.filter(is_completed=True)
