@@ -692,16 +692,7 @@
                     </div>
 
                     <div class="action-buttons">
-                        {% if not offer_letter.is_accepted %}
-                        <button class="btn" onclick="acceptOffer()">
-                            <i class="fas fa-check"></i> Accept Offer
-                        </button>
-                        {% else %}
-                        <button class="btn secondary" disabled>
-                            <i class="fas fa-check-circle"></i> Offer Accepted
-                        </button>
-                        {% endif %}
-                        <a href="#" class="btn secondary">
+                        <a href="{% url 'lms:download_offer_letter' %}" class="btn secondary">
                             <i class="fas fa-download"></i> Download PDF
                         </a>
                     </div>
@@ -744,31 +735,7 @@
             });
         });
 
-        function acceptOffer() {
-            if (confirm('Are you sure you want to accept this offer?')) {
-                fetch('{% url "lms:accept_offer" %}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': '{{ csrf_token }}'
-                    },
-                    body: JSON.stringify({})
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Offer accepted successfully!');
-                        location.reload();
-                    } else {
-                        alert('Error accepting offer: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error accepting offer');
-                });
-            }
-        }
+
     </script>
 </body>
 </html>

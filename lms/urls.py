@@ -23,5 +23,5 @@ urlpatterns = [
     path('change-password/', views.change_password, name='change_password'),
     path('notifications/', views.notifications, name='notifications'),
     path('submit-project/', views.submit_project, name='submit_project'),
-    path('accept-offer/', views.accept_offer, name='accept_offer'),
+    path('download-offer-letter/', views.download_offer_letter, name='download_offer_letter'),
 ]

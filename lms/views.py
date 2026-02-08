@@ -2,12 +2,18 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 from django.db import models
 from .models import Student, Session, Attendance, Assessment, StudentAssessment, Project, StudyMaterial, Certificate, JobOpening, JobApplication, Notification, OfferLetter
 import json
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.lib import colors
+from reportlab.lib.units import inch
+from io import BytesIO
 
 def dashboard(request):
     student, created = Student.objects.get_or_create(
@@ -306,28 +312,91 @@ def logout_view(request):
     logout(request)
     return redirect('lms:login')
 
-@csrf_exempt
 @login_required
-def accept_offer(request):
-    if request.method == 'POST':
-        student = get_object_or_404(Student, user=request.user)
-        offer_letter = get_object_or_404(OfferLetter, student=student)
+def download_offer_letter(request):
+    student = get_object_or_404(Student, user=request.user)
+    offer_letter = get_object_or_404(OfferLetter, student=student)
 
-        if not offer_letter.is_accepted:
-            offer_letter.is_accepted = True
-            offer_letter.accepted_at = timezone.now()
-            offer_letter.save()
+    # Create a buffer for the PDF
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=letter)
+    styles = getSampleStyleSheet()
 
-            # Create a notification for the student
-            Notification.objects.create(
-                student=student,
-                title='Offer Accepted',
-                message=f'Congratulations! You have successfully accepted the offer for {offer_letter.title} at {offer_letter.company}.',
-                notification_type='success'
-            )
+    # Define custom styles
+    title_style = ParagraphStyle(
+        'Title',
+        parent=styles['Heading1'],
+        fontSize=18,
+        spaceAfter=30,
+        alignment=1,  # Center alignment
+    )
+    company_style = ParagraphStyle(
+        'Company',
+        parent=styles['Normal'],
+        fontSize=14,
+        spaceAfter=20,
+        alignment=1,
+    )
+    normal_style = styles['Normal']
+    bold_style = styles['Heading4']
 
-            return JsonResponse({'success': True, 'message': 'Offer accepted successfully!'})
-        else:
-            return JsonResponse({'success': False, 'message': 'Offer has already been accepted.'})
+    # Build the PDF content
+    content = []
 
-    return JsonResponse({'success': False, 'message': 'Invalid request method.'})
+    # Company header
+    content.append(Paragraph("Manac Infotech Pvt Ltd", title_style))
+    content.append(Paragraph("Excellence in Technology", company_style))
+    content.append(Spacer(1, 0.5*inch))
+
+    # Date
+    content.append(Paragraph(f"Date: {offer_letter.issued_date.strftime('%B %d, %Y')}", normal_style))
+    content.append(Spacer(1, 0.5*inch))
+
+    # Salutation
+    content.append(Paragraph(f"Dear {student.full_name},", bold_style))
+    content.append(Spacer(1, 0.25*inch))
+
+    # Body
+    content.append(Paragraph(f"We are delighted to extend this offer of employment for the position of <b>{offer_letter.title}</b> with {offer_letter.company}. We were very impressed with your background and skills, and we are confident that you will make a significant contribution to our team.", normal_style))
+    content.append(Spacer(1, 0.25*inch))
+
+    # Offer details table
+    data = [
+        ['Start Date', offer_letter.start_date.strftime('%B %d, %Y')],
+        ['Compensation', f"₹{offer_letter.compensation}/Month"],
+        ['Reporting To', offer_letter.reporting_to],
+        ['Location', offer_letter.location],
+    ]
+
+    table = Table(data, colWidths=[2*inch, 3*inch])
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, -1), 12),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+    ]))
+    content.append(table)
+    content.append(Spacer(1, 0.25*inch))
+
+    # Closing
+    content.append(Paragraph("Please review the attached document for full terms and conditions. By accepting this offer, you agree to the policies and procedures of our company.", normal_style))
+    content.append(Spacer(1, 0.5*inch))
+    content.append(Paragraph("Sincerely,", normal_style))
+    content.append(Paragraph("Manac Infotech Pvt Ltd", bold_style))
+
+    # Build the PDF
+    doc.build(content)
+
+    # Get the PDF data
+    pdf_data = buffer.getvalue()
+    buffer.close()
+
+    # Create the HTTP response
+    response = HttpResponse(pdf_data, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="offer_letter_{student.full_name.replace(" ", "_")}.pdf"'
+
+    return response
