@@ -3,33 +3,297 @@
 {% block title %}Attendance Record - Manac LMS Portal{% endblock %}
 
 {% block content %}
+<style>
+.sidebar {
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    transition: transform 0.3s ease;
+    position: relative;
+    padding-top: 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.sidebar::-webkit-scrollbar {
+    display: none;
+}
+
+.sidebar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255, 107, 107, 0.15), rgba(78, 205, 196, 0.15), rgba(69, 183, 209, 0.15), rgba(254, 202, 87, 0.15), rgba(255, 159, 243, 0.15));
+    background-size: 300% 300%;
+    animation: sidebarGlow 6s ease infinite;
+    pointer-events: none;
+}
+
+@keyframes sidebarGlow {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.sidebar.hidden {
+    width: 60px;
+    transform: translateX(0);
+}
+
+.sidebar.hidden ul li a {
+    padding: 16px 8px;
+    justify-content: center;
+    text-align: center;
+}
+
+.sidebar.hidden ul li a span {
+    display: none;
+}
+
+.sidebar.hidden ul li a i {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+}
+
+.sidebar ul li {
+    margin: 8px 16px;
+    position: relative;
+}
+
+.sidebar ul li a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    border-radius: 15px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar ul li a:hover, .sidebar ul li a.active {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(8px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    color: #fff;
+}
+
+.sidebar ul li a i {
+    width: 20px;
+    text-align: center;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.sidebar ul li a:hover i {
+    transform: scale(1.2) rotate(10deg);
+    color: #4ecdc4;
+}
+
+.main-content {
+    margin-left: 0;
+    margin-top: 70px;
+    padding: 2rem;
+    flex: 1;
+    transition: margin-left 0.3s ease;
+    min-height: calc(100vh - 70px);
+}
+
+.main-content.expanded {
+    margin-left: 0;
+}
+
+.attendance-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 2rem 2rem 2rem 0rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 220px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.attendance-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+}
+
+.attendance-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(102, 126, 234, 0.1) 0%, rgba(78, 205, 196, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.attendance-card:hover::before {
+    opacity: 1;
+}
+
+.attendance-card .card-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.attendance-card h3 {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 1;
+    color: #333;
+}
+
+.attendance-card p {
+    color: #666;
+    font-size: 16px;
+    position: relative;
+    z-index: 1;
+}
+
+.attendance-card.total-sessions {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.attendance-card.total-sessions h3,
+.attendance-card.total-sessions p {
+    color: white;
+}
+
+.attendance-card.summary {
+    background: linear-gradient(135deg, #2ed573 0%, #1e90ff 100%);
+    color: white;
+}
+
+.attendance-card.summary h3 {
+    font-size: 28px !important;
+    color: white;
+}
+
+.attendance-card.summary p {
+    color: white;
+}
+
+.attendance-card.rate {
+    background: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%);
+    color: white;
+}
+
+.attendance-card.rate h3,
+.attendance-card.rate p {
+    color: white;
+}
+
+/* Responsive Design for iPhone 12 and smaller screens */
+@media (max-width: 390px) {
+    .main-content {
+        margin-left: 0 !important;
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+
+    .attendance-card {
+        height: auto !important;
+        padding: 1.5rem 1rem !important;
+    }
+
+    .attendance-card .card-icon {
+        width: 50px !important;
+        height: 50px !important;
+        font-size: 24px !important;
+        margin-bottom: 15px !important;
+    }
+
+    .attendance-card h3 {
+        font-size: 28px !important;
+        margin-bottom: 8px !important;
+    }
+
+    .attendance-card p {
+        font-size: 14px !important;
+    }
+
+    .content-header h2 {
+        font-size: 24px !important;
+    }
+
+    .table-container {
+        overflow-x: auto !important;
+    }
+
+    table {
+        min-width: 100% !important;
+        font-size: 12px !important;
+    }
+
+    th, td {
+        padding: 8px 6px !important;
+    }
+}
+</style>
 <div class="content-header">
     <h2>Attendance Record</h2>
 </div>
 <div class="dashboard-grid">
-    <div class="card">
-        <div class="card-icon blue">
+    <div class="attendance-card total-sessions">
+        <div class="card-icon">
             <i class="fas fa-calendar-alt"></i>
         </div>
         <h3>{{ total_sessions }}</h3>
         <p>Total Sessions</p>
     </div>
-    <div class="card">
-        <div class="card-icon green">
-            <i class="fas fa-check-circle"></i>
+    <div class="attendance-card summary">
+        <div class="card-icon">
+            <i class="fas fa-user-check"></i>
         </div>
-        <h3>{{ present_count }}</h3>
-        <p>Present</p>
+        <h3>Present: {{ present_count }} | Absent: {{ absent_count }}</h3>
+        <p>Attendance Summary</p>
     </div>
-    <div class="card">
-        <div class="card-icon red">
-            <i class="fas fa-times-circle"></i>
-        </div>
-        <h3>{{ absent_count }}</h3>
-        <p>Absent</p>
-    </div>
-    <div class="card">
-        <div class="card-icon orange">
+    <div class="attendance-card rate">
+        <div class="card-icon">
             <i class="fas fa-percentage"></i>
         </div>
         <h3>{{ attendance_rate }}%</h3>

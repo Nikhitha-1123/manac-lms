@@ -15,7 +15,11 @@ from reportlab.lib import colors
 from reportlab.lib.units import inch
 from io import BytesIO
 
+@login_required
 def dashboard(request):
+    if not request.user.is_authenticated:
+        return redirect('lms:login')
+
     student, created = Student.objects.get_or_create(
         user=request.user,
         defaults={

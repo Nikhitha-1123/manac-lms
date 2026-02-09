@@ -2,6 +2,7 @@ import os
 import django
 from django.utils import timezone
 from datetime import date, time, timedelta
+import random
 
 # Setup Django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'manac_lms.settings')
@@ -34,6 +35,66 @@ student, created = Student.objects.get_or_create(
         'enrollment_date': date.today() - timedelta(days=30)
     }
 )
+
+# Create additional students
+additional_students_data = [
+    {
+        'username': 'student1',
+        'first_name': 'Alice',
+        'last_name': 'Johnson',
+        'email': 'alice@example.com',
+        'full_name': 'Alice Johnson',
+        'college': 'Tech University',
+        'branch': 'Information Technology',
+        'year': '3rd'
+    },
+    {
+        'username': 'student2',
+        'first_name': 'Bob',
+        'last_name': 'Smith',
+        'email': 'bob@example.com',
+        'full_name': 'Bob Smith',
+        'college': 'Engineering College',
+        'branch': 'Computer Engineering',
+        'year': '2nd'
+    },
+    {
+        'username': 'student3',
+        'first_name': 'Charlie',
+        'last_name': 'Brown',
+        'email': 'charlie@example.com',
+        'full_name': 'Charlie Brown',
+        'college': 'Science Institute',
+        'branch': 'Software Engineering',
+        'year': '4th'
+    }
+]
+
+additional_students = []
+for student_data in additional_students_data:
+    user_obj, created = User.objects.get_or_create(
+        username=student_data['username'],
+        defaults={
+            'first_name': student_data['first_name'],
+            'last_name': student_data['last_name'],
+            'email': student_data['email']
+        }
+    )
+    if created:
+        user_obj.set_password('password123')
+        user_obj.save()
+    
+    stud, created = Student.objects.get_or_create(
+        user=user_obj,
+        defaults={
+            'full_name': student_data['full_name'],
+            'college': student_data['college'],
+            'branch': student_data['branch'],
+            'year': student_data['year'],
+            'enrollment_date': date.today() - timedelta(days=30)
+        }
+    )
+    additional_students.append(stud)
 
 # Clear existing sessions
 Session.objects.all().delete()
@@ -124,12 +185,14 @@ for session_data in sessions_data:
 
 # Create Attendance for past sessions
 past_sessions = Session.objects.filter(is_completed=True)
+all_students = [student] + additional_students
 for session in past_sessions:
-    Attendance.objects.get_or_create(
-        student=student,
-        session=session,
-        defaults={'is_present': True}
-    )
+    for stud in all_students:
+        Attendance.objects.get_or_create(
+            student=stud,
+            session=session,
+            defaults={'is_present': random.choice([True, False])}
+        )
 
 # Create Assessments
 assessments_data = [
