@@ -734,7 +734,7 @@
                         <div class="material-meta">
                             {{ material.file_size }} • {{ material.uploaded_at|date:"M d, Y" }}
                         </div>
-                        <a href="{{ material.file.url }}" class="download-btn" download>
+                        <a href="{% if material.file %}{{ material.file.url }}{% else %}{{ material.file_url }}{% endif %}" class="download-btn" download>
                             <i class="fas fa-download"></i> Download
                         </a>
                     </div>

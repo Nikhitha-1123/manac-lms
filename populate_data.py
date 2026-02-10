@@ -9,7 +9,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'manac_lms.settings')
 django.setup()
 
 from django.contrib.auth.models import User
-from lms.models import Student, Session, Attendance, Assessment, StudentAssessment, Project, Notification
+from lms.models import Student, Session, Attendance, Assessment, StudentAssessment, Project, StudyMaterial, Notification
 
 # Get or create a user
 user, created = User.objects.get_or_create(
@@ -300,6 +300,64 @@ for notification_data in notifications_data:
         student=student,
         title=notification_data['title'],
         defaults=notification_data
+    )
+
+# Create Study Materials
+study_materials_data = [
+    {
+        'title': 'HTML5 Complete Guide',
+        'description': 'Comprehensive guide to HTML5 including semantic elements, forms, and multimedia',
+        'file_url': 'https://www.w3.org/TR/html5/',
+        'file_type': 'pdf',
+        'file_size': 2048000,  # 2MB
+        'uploaded_by': user
+    },
+    {
+        'title': 'CSS3 Master Reference',
+        'description': 'Complete reference for CSS3 properties, selectors, and advanced styling techniques',
+        'file_url': 'https://developer.mozilla.org/en-US/docs/Web/CSS',
+        'file_type': 'pdf',
+        'file_size': 1536000,  # 1.5MB
+        'uploaded_by': user
+    },
+    {
+        'title': 'JavaScript Fundamentals',
+        'description': 'Essential JavaScript concepts including variables, functions, objects, and DOM manipulation',
+        'file_url': 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide',
+        'file_type': 'epub',
+        'file_size': 1024000,  # 1MB
+        'uploaded_by': user
+    },
+    {
+        'title': 'React Development Toolkit',
+        'description': 'Source code examples and templates for React development including hooks, components, and state management',
+        'file_url': 'https://github.com/facebook/react/archive/main.zip',
+        'file_type': 'zip',
+        'file_size': 5120000,  # 5MB
+        'uploaded_by': user
+    },
+    {
+        'title': 'Django Web Development',
+        'description': 'Presentation covering Django framework, models, views, templates, and deployment',
+        'file_url': 'https://docs.djangoproject.com/en/stable/',
+        'file_type': 'ppt',
+        'file_size': 3072000,  # 3MB
+        'uploaded_by': user
+    },
+    {
+        'title': 'Full Stack Development Roadmap',
+        'description': 'Complete learning path for becoming a full-stack developer with modern technologies',
+        'file_url': 'https://roadmap.sh/full-stack',
+        'file_type': 'pdf',
+        'file_size': 512000,  # 512KB
+        'uploaded_by': user
+    }
+]
+
+for material_data in study_materials_data:
+    StudyMaterial.objects.get_or_create(
+        title=material_data['title'],
+        defaults=material_data
     )
 
 print("Sample data populated successfully!")
