@@ -323,6 +323,108 @@ def logout_view(request):
     return redirect('lms:login')
 
 @login_required
+def quiz(request):
+    context = {}
+    return render(request, 'lms/quiz.html', context)
+
+@login_required
+def quiz_submit(request):
+    if request.method == 'POST':
+        # Ensure student exists
+        student, created = Student.objects.get_or_create(
+            user=request.user,
+            defaults={
+                'full_name': request.user.get_full_name() or request.user.username,
+                'college': 'Default College',
+                'branch': 'Computer Science',
+                'year': '1st',
+                'enrollment_date': timezone.now().date()
+            }
+        )
+
+        import json
+        answers_str = request.POST.get('answers', '{}')
+        try:
+            answers = json.loads(answers_str) if answers_str else {}
+        except json.JSONDecodeError:
+            answers = {}
+
+        # Quiz questions and correct answers
+        questions = [
+            {'correct': '14'},
+            {'correct': 'def'},
+            {'correct': 'Returns the length of a string or list'},
+            {'correct': 'List'},
+            {'correct': '# This is a comment'},
+            {'correct': 'Executes code if a condition is true'},
+            {'correct': 'print'},
+            {'correct': '3'},
+            {'correct': '[]'},
+            {'correct': 'Ends a loop prematurely'}
+        ]
+
+        score = 0
+        total_questions = len(questions)
+        results = []
+
+        for i, question in enumerate(questions):
+            user_answer = answers.get(str(i), '')
+            correct = question['correct']
+            is_correct = user_answer == correct
+            if is_correct:
+                score += 1
+            results.append({
+                'question_number': i + 1,
+                'user_answer': user_answer,
+                'correct_answer': correct,
+                'is_correct': is_correct
+            })
+
+        percentage = (score / total_questions) * 100
+        incorrect = total_questions - score
+
+        # Save to database
+        assessment, created = Assessment.objects.get_or_create(
+            title='Python Basics Quiz',
+            defaults={
+                'description': 'Test your knowledge of Python fundamentals',
+                'topic': 'Python Programming',
+                'total_marks': 10,
+                'duration_minutes': 45,
+                'due_date': timezone.now() + timezone.timedelta(days=30),
+                'is_active': True
+            }
+        )
+
+        student_assessment, created = StudentAssessment.objects.get_or_create(
+            student=student,
+            assessment=assessment,
+            defaults={
+                'max_score': 10,
+                'answers': answers,
+                'submitted_at': timezone.now(),
+                'is_completed': True
+            }
+        )
+        student_assessment.score = score
+        student_assessment.answers = answers
+        student_assessment.submitted_at = timezone.now()
+        student_assessment.is_completed = True
+        student_assessment.save()
+
+        context = {
+            'score': score,
+            'total_questions': total_questions,
+            'percentage': round(percentage, 1),
+            'incorrect': incorrect,
+            'results': results
+        }
+
+        return render(request, 'lms/quiz_results.html', context)
+
+    return JsonResponse({'error': 'Invalid request method'})
+
+@login_required
 def download_offer_letter(request):
     student = get_object_or_404(Student, user=request.user)
     offer_letter = get_object_or_404(OfferLetter, student=student)

@@ -1,9 +1,4 @@
-# Task: Allow interns to download offer letter and remove accept offer button
-
-## Steps to Complete
-
-- [ ] Install reportlab library for PDF generation
-- [ ] Edit lms/templates/lms/offer_letter.html: Remove the "Accept Offer" button and its conditional logic, update "Download PDF" button to link to new download URL
-- [ ] Edit lms/views.py: Add new `download_offer_letter` view to generate and return PDF
-- [ ] Edit lms/urls.py: Add URL pattern for the download view
-- [x] Test the PDF download functionality
+- [x] Modify quiz_submit view to save quiz results to StudentAssessment model
+- [x] Ensure Assessment for quiz exists or create it
+- [x] Update quiz_results.html if needed for better integration
+- [x] Test the quiz submission and results display

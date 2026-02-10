@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assessments - Manac LMS Portal</title>
+    <title>Python Basics Quiz - Manac LMS Portal</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
@@ -52,7 +52,7 @@
         }
 
         .container {
-            display: flex;
+            position: relative;
             min-height: 100vh;
         }
 
@@ -370,18 +370,18 @@
         }
 
         .main-content {
-            margin-left: 0;
-            margin-top: 70px;
-            padding: 2rem;
-            flex: 1;
-            transition: margin-left 0.3s ease;
-            min-height: calc(100vh - 70px);
+            position: absolute;
+            top: 70px;
+            left: 250px;
+            right: 0;
+            bottom: 0;
+            padding: 0;
+            transition: left 0.3s ease;
             z-index: 1;
-            position: relative;
         }
 
         .main-content.expanded {
-            margin-left: 0;
+            left: 0;
         }
 
         .card {
@@ -412,128 +412,90 @@
             gap: 10px;
         }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+        .quiz-header {
+            text-align: center;
             margin-bottom: 30px;
         }
 
-        .stat-card {
+        .quiz-header h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .timer {
+            font-size: 24px;
+            font-weight: 600;
+            color: #e74c3c;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .question-card {
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 900;
-            margin: 10px 0;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .stat-label {
-            color: #666;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        .assessment-grid {
-            display: grid;
-            gap: 20px;
-        }
-
-        .assessment-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
             border-radius: 16px;
             padding: 25px;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .assessment-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-        }
-
-        .assessment-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .assessment-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #2c3e50;
-            margin: 0;
-        }
-
-        .assessment-status {
-            background: #fff3cd;
-            color: #856404;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .assessment-status.completed {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .assessment-meta {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            color: #666;
-            font-size: 14px;
-        }
-
-        .assessment-description {
-            color: #555;
-            line-height: 1.6;
             margin-bottom: 20px;
         }
 
-        .assessment-actions {
+        .question-number {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .question-text {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .options {
             display: flex;
+            flex-direction: column;
             gap: 10px;
-            justify-content: flex-end;
-            flex-wrap: wrap;
+        }
+
+        .option {
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .option:hover {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: #667eea;
+        }
+
+        .option.selected {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: #667eea;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
         }
 
         .btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 600;
             transition: all 0.3s ease;
             text-decoration: none;
@@ -555,54 +517,19 @@
             box-shadow: 0 8px 25px rgba(108, 117, 125, 0.4);
         }
 
-        .score-display {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #eee;
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            height: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
         }
 
-        .score-circle {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #28a745, #20c997);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 18px;
-            font-weight: 900;
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
-        }
-
-        .score-info {
-            flex: 1;
-        }
-
-        .score-label {
-            font-size: 12px;
-            color: #888;
-            margin-bottom: 5px;
-        }
-
-        .score-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: #28a745;
-        }
-
-        .content-header {
-            margin-bottom: 30px;
-        }
-
-        .content-header h2 {
-            font-size: 32px;
-            font-weight: 700;
-            color: #2c3e50;
-            margin-bottom: 10px;
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s ease;
         }
 
         @media (max-width: 768px) {
@@ -626,22 +553,9 @@
                 padding: 1.5rem;
             }
 
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .assessment-meta {
+            .navigation {
                 flex-direction: column;
-                gap: 8px;
-            }
-
-            .assessment-actions {
-                flex-direction: column;
-            }
-
-            .score-display {
-                flex-direction: column;
-                text-align: center;
+                gap: 10px;
             }
         }
     </style>
@@ -674,7 +588,10 @@
     </div>
 
     <div class="container">
-        <div class="sidebar">
+        <form id="quiz-form" method="POST" action="{% url 'lms:quiz_submit' %}">
+            {% csrf_token %}
+            <input type="hidden" name="answers" id="answers-input">
+            <div class="sidebar">
             <ul>
                 <li data-tooltip="Dashboard"><a href="{% url 'lms:dashboard' %}"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
                 <li data-tooltip="Offer Letter"><a href="{% url 'lms:offer_letter' %}"><i class="fas fa-file-contract"></i> <span>Offer Letter</span></a></li>
@@ -690,149 +607,36 @@
         </div>
 
         <div class="main-content" id="main-content">
-            <div class="content-header">
-                <h2>Assessments</h2>
-                <p style="color: #7f8c8d;">Take quizzes and track your assessment progress</p>
+            <div class="quiz-header">
+                <h2>Python Basics Quiz</h2>
+                <p>Test your knowledge of Python fundamentals</p>
             </div>
 
-            <!-- Stats Overview -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-number">{{ pending_count }}</div>
-                    <div class="stat-label">Pending</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">{{ completed_count }}</div>
-                    <div class="stat-label">Completed</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">{{ average_score|floatformat:1 }}</div>
-                    <div class="stat-label">Average Score</div>
-                </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
             </div>
 
-            <!-- Assessment List -->
+            <div class="timer" id="timer">45:00</div>
+
             <div class="card">
-                <h3><i class="fas fa-clipboard-check" style="color: #ffc107;"></i> My Assessments</h3>
-                <div class="assessment-grid">
-                    <!-- Upcoming Assessment Test -->
-                    <div class="assessment-card">
-                        <div class="assessment-header">
-                            <h4 class="assessment-title">Upcoming Assessment Test</h4>
-                            <span class="assessment-status" style="background: #cce5ff; color: #0066cc;">Upcoming</span>
-                        </div>
-                        <p class="assessment-description">This is an upcoming assessment test. Details will be provided soon.</p>
-                        <div class="assessment-meta">
-                            <span class="meta-item">
-                                <i class="fas fa-clock"></i>
-                                30 Minutes
-                            </span>
-                            <span class="meta-item">
-                                <i class="fas fa-calendar-alt"></i>
-                                Due: Dec 15, 2023
-                            </span>
-                            <span class="meta-item">
-                                <i class="fas fa-trophy"></i>
-                                50 Marks
-                            </span>
-                        </div>
-                        <div class="assessment-actions">
-                            <button class="btn secondary" disabled>
-                                <i class="fas fa-clock"></i> Coming Soon
-                            </button>
-                        </div>
+                <div class="question-card" id="question-card">
+                    <div class="question-number">Question 1 of 10</div>
+                    <div class="question-text">What is the output of the following Python code?<br><br><code>print(2 + 3 * 4)</code></div>
+                    <div class="options">
+                        <div class="option" data-value="14">14</div>
+                        <div class="option" data-value="20">20</div>
+                        <div class="option" data-value="24">24</div>
+                        <div class="option" data-value="11">11</div>
                     </div>
-                    <!-- Active Assessment Test -->
-                    <div class="assessment-card">
-                        <div class="assessment-header">
-                            <h4 class="assessment-title">Python Basics Quiz</h4>
-                            <span class="assessment-status">Pending</span>
-                        </div>
-                        <p class="assessment-description">Test your knowledge of Python fundamentals including variables, loops, and functions.</p>
-                        <div class="assessment-meta">
-                            <span class="meta-item">
-                                <i class="fas fa-clock"></i>
-                                45 Minutes
-                            </span>
-                            <span class="meta-item">
-                                <i class="fas fa-calendar-alt"></i>
-                                Due: Feb 15, 2026
-                            </span>
-                            <span class="meta-item">
-                                <i class="fas fa-trophy"></i>
-                                100 Marks
-                            </span>
-                        </div>
-                        <div class="assessment-actions">
-                            <button class="btn" onclick="window.location.href='{% url 'lms:quiz' %}'">
-                                <i class="fas fa-play"></i> Start Quiz
-                            </button>
-                            <a href="#" class="btn secondary">
-                                <i class="fas fa-eye"></i> View Details
-                            </a>
-                        </div>
-                    </div>
-                    {% for student_assessment in student_assessments %}
-                    <div class="assessment-card">
-                        <div class="assessment-header">
-                            <h4 class="assessment-title">{{ student_assessment.assessment.title }}</h4>
-                            <span class="assessment-status {% if student_assessment.is_completed %}completed{% endif %}">
-                                {% if student_assessment.is_completed %}Completed{% else %}Pending{% endif %}
-                            </span>
-                        </div>
-                        <p class="assessment-description">{{ student_assessment.assessment.description|truncatechars:150 }}</p>
-                        <div class="assessment-meta">
-                            <span class="meta-item">
-                                <i class="fas fa-clock"></i>
-                                {{ student_assessment.assessment.duration_minutes }} Minutes
-                            </span>
-                            <span class="meta-item">
-                                <i class="fas fa-calendar-alt"></i>
-                                Due: {{ student_assessment.assessment.due_date|date:"M d, Y" }}
-                            </span>
-                            <span class="meta-item">
-                                <i class="fas fa-trophy"></i>
-                                {{ student_assessment.assessment.total_marks }} Marks
-                            </span>
-                        </div>
+                </div>
 
-                        {% if student_assessment.is_completed %}
-                        <div class="score-display">
-                            <div class="score-circle">
-                                {{ student_assessment.score }}
-                            </div>
-                            <div class="score-info">
-                                <div class="score-label">Your Score</div>
-                                <div class="score-value">{{ student_assessment.score }}/{{ student_assessment.assessment.total_marks }}</div>
-                                <div style="font-size: 12px; color: #666; margin-top: 5px;">
-                                    Submitted: {{ student_assessment.submitted_at|date:"M d, Y" }}
-                                </div>
-                            </div>
-                        </div>
-                        {% else %}
-                        <div class="assessment-actions">
-                            {% if student_assessment.assessment.due_date >= today %}
-                            <button class="btn" onclick="startAssessment({{ student_assessment.assessment.id }})">
-                                <i class="fas fa-play"></i> Start Quiz
-                            </button>
-                            {% else %}
-                            <button class="btn secondary" disabled>
-                                <i class="fas fa-lock"></i> Expired
-                            </button>
-                            {% endif %}
-                            <a href="#" class="btn secondary">
-                                <i class="fas fa-eye"></i> View Details
-                            </a>
-                        </div>
-                        {% endif %}
-                    </div>
-                    {% empty %}
-                    <div style="text-align: center; padding: 60px; color: #666;">
-                        <i class="fas fa-clipboard-check" style="font-size: 64px; color: #ddd; margin-bottom: 20px;"></i>
-                        <h3>No Assessments Available</h3>
-                        <p>Assessments will be assigned by your instructors soon.</p>
-                    </div>
-                    {% endfor %}
+                <div class="navigation">
+                    <button type="button" class="btn secondary" id="prev-btn" disabled>
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button type="button" class="btn" id="next-btn">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -870,12 +674,140 @@
                     window.location.href = this.href;
                 });
             });
-        });
 
-        function startAssessment(assessmentId) {
-            // This would typically redirect to the assessment taking page
-            alert('Assessment functionality would be implemented here. Assessment ID: ' + assessmentId);
-        }
+            // Quiz functionality
+            let currentQuestion = 0;
+            const totalQuestions = 10;
+            let timeLeft = 45 * 60; // 45 minutes in seconds
+            let timerInterval;
+            let userAnswers = {}; // Store answers for all questions
+
+            const questions = [
+                {
+                    question: "What is the output of the following Python code?<br><br><code>print(2 + 3 * 4)</code>",
+                    options: ["14", "20", "24", "11"],
+                    correct: "14"
+                },
+                {
+                    question: "Which of the following is used to define a function in Python?",
+                    options: ["def", "function", "fun", "define"],
+                    correct: "def"
+                },
+                {
+                    question: "What does the 'len()' function do?",
+                    options: ["Returns the length of a string or list", "Returns the last element", "Returns the first element", "Sorts the list"],
+                    correct: "Returns the length of a string or list"
+                },
+                {
+                    question: "Which data type is mutable in Python?",
+                    options: ["Tuple", "String", "List", "Integer"],
+                    correct: "List"
+                },
+                {
+                    question: "What is the correct way to create a comment in Python?",
+                    options: ["// This is a comment", "# This is a comment", "/* This is a comment */", "<!-- This is a comment -->"],
+                    correct: "# This is a comment"
+                },
+                {
+                    question: "What does the 'if' statement do in Python?",
+                    options: ["Loops through items", "Executes code if a condition is true", "Defines a function", "Imports a module"],
+                    correct: "Executes code if a condition is true"
+                },
+                {
+                    question: "Which of the following is not a Python keyword?",
+                    options: ["if", "for", "print", "while"],
+                    correct: "print"
+                },
+                {
+                    question: "What is the result of 10 // 3 in Python?",
+                    options: ["3.33", "3", "4", "3.0"],
+                    correct: "3"
+                },
+                {
+                    question: "How do you create a list in Python?",
+                    options: ["{}", "[]", "()", "<>"],
+                    correct: "[]"
+                },
+                {
+                    question: "What does the 'break' statement do?",
+                    options: ["Starts a loop", "Ends a loop prematurely", "Skips to the next iteration", "Returns a value"],
+                    correct: "Ends a loop prematurely"
+                }
+            ];
+
+            function updateProgress() {
+                const progress = ((currentQuestion + 1) / totalQuestions) * 100;
+                document.getElementById('progress-fill').style.width = progress + '%';
+            }
+
+            function updateTimer() {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                document.getElementById('timer').textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                timeLeft--;
+
+                if (timeLeft < 0) {
+                    clearInterval(timerInterval);
+                    alert('Time is up! Quiz submitted automatically.');
+                    submitQuiz();
+                }
+            }
+
+            function loadQuestion() {
+                const question = questions[currentQuestion];
+                document.querySelector('.question-number').textContent = `Question ${currentQuestion + 1} of ${totalQuestions}`;
+                document.querySelector('.question-text').innerHTML = question.question;
+
+                const options = document.querySelectorAll('.option');
+                options.forEach((option, index) => {
+                    option.textContent = question.options[index];
+                    option.classList.remove('selected');
+                    // Check if this option was previously selected for this question
+                    if (userAnswers[currentQuestion] === question.options[index]) {
+                        option.classList.add('selected');
+                    }
+                    option.onclick = function() {
+                        options.forEach(opt => opt.classList.remove('selected'));
+                        this.classList.add('selected');
+                        // Store the answer
+                        userAnswers[currentQuestion] = this.textContent.trim();
+                    };
+                });
+
+                document.getElementById('prev-btn').disabled = currentQuestion === 0;
+                document.getElementById('next-btn').textContent = currentQuestion === totalQuestions - 1 ? 'Submit Quiz' : 'Next';
+
+                updateProgress();
+            }
+
+            function submitQuiz() {
+                // Set answers in hidden input
+                document.getElementById('answers-input').value = JSON.stringify(userAnswers);
+
+                // Submit the form
+                document.getElementById('quiz-form').submit();
+            }
+
+            document.getElementById('next-btn').addEventListener('click', function() {
+                if (currentQuestion < totalQuestions - 1) {
+                    currentQuestion++;
+                    loadQuestion();
+                } else {
+                    submitQuiz();
+                }
+            });
+
+            document.getElementById('prev-btn').addEventListener('click', function() {
+                if (currentQuestion > 0) {
+                    currentQuestion--;
+                    loadQuestion();
+                }
+            });
+
+            // Start timer
+            timerInterval = setInterval(updateTimer, 1000);
+            loadQuestion();
+        });
     </script>
 </body>
 </html>
