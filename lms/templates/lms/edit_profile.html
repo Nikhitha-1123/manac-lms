@@ -2,6 +2,75 @@
 
 {% block title %}Edit Profile - Manac LMS Portal{% endblock %}
 
+{% block extra_head %}
+<style>
+    .sidebar {
+        width: 250px;
+    }
+
+    .sidebar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .sidebar::before {
+        content: '';
+        background-size: 300% 300%;
+        animation: sidebarGlow 6s ease infinite;
+        pointer-events: none;
+    }
+
+    @keyframes sidebarGlow {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
+
+    .sidebar.hidden {
+        width: 60px;
+    }
+
+    .sidebar.hidden ul li a {
+        padding: 16px 8px;
+    }
+
+    .sidebar.hidden ul li a span {
+        display: none;
+    }
+
+    .sidebar.hidden ul li a i {
+        margin: 0;
+    }
+
+    .sidebar ul {
+        list-style: none;
+    }
+
+    .sidebar ul li {
+        margin: 8px 16px;
+    }
+
+    .sidebar ul li a {
+        display: flex;
+    }
+
+    .sidebar ul li a:hover, .sidebar ul li a.active {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .sidebar ul li a i {
+        width: 20px;
+    }
+
+    .sidebar ul li a:hover i {
+        transform: scale(1.2) rotate(10deg);
+    }
+    @media (max-width: 768px) {
+        .sidebar {
+            transform: translateX(-100%);
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="content-header">
     <h2>Edit Profile</h2>
