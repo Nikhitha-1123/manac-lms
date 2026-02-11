@@ -1,4 +1,6 @@
-- [x] Modify quiz_submit view to save quiz results to StudentAssessment model
-- [x] Ensure Assessment for quiz exists or create it
-- [x] Update quiz_results.html if needed for better integration
-- [x] Test the quiz submission and results display
+# TODO: Fix MultipleObjectsReturned Error in download_offer_letter View
+
+## Steps to Complete:
+- [x] Modify the download_offer_letter function in lms/views.py to retrieve the most recent offer letter using filter().order_by('-issued_date').first() instead of get_object_or_404
+- [x] Add a check to raise Http404 if no offer letter exists
+- [x] Test the fix by running the Django server and accessing the download-offer-letter URL

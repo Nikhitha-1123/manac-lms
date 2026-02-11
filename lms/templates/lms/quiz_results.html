@@ -699,17 +699,27 @@
                 <li data-tooltip="Session Recordings"><a href="{% url 'lms:session_recordings' %}"><i class="fas fa-video"></i> <span>Session Recordings</span></a></li>
                 <li data-tooltip="Attendance"><a href="{% url 'lms:attendance' %}"><i class="fas fa-user-check"></i> <span>Attendance</span></a></li>
                 <li data-tooltip="Project Details"><a href="{% url 'lms:project_details' %}"><i class="fas fa-project-diagram"></i> <span>Project Details</span></a></li>
+                {% if mock_test %}
+                <li data-tooltip="Placement Readiness"><a href="{% url 'lms:placement_readiness' %}" class="active"><i class="fas fa-chart-line"></i> <span>Placement Readiness</span></a></li>
+                {% else %}
                 <li data-tooltip="Assessment"><a href="{% url 'lms:assessment' %}" class="active"><i class="fas fa-clipboard-check"></i> <span>Assessment</span></a></li>
+                {% endif %}
                 <li data-tooltip="Study Material"><a href="{% url 'lms:study_material' %}"><i class="fas fa-book"></i> <span>Study Material</span></a></li>
                 <li data-tooltip="Certificate"><a href="{% url 'lms:certificate' %}"><i class="fas fa-certificate"></i> <span>Certificate</span></a></li>
+                {% if not mock_test %}
                 <li data-tooltip="Placement Readiness"><a href="{% url 'lms:placement_readiness' %}"><i class="fas fa-chart-line"></i> <span>Placement Readiness</span></a></li>
+                {% endif %}
             </ul>
         </div>
 
         <div class="main-content" id="main-content">
             <div class="results-header">
                 <h2>Quiz Results</h2>
+                {% if mock_test %}
+                <p>{{ mock_test.title }} - Review your performance</p>
+                {% else %}
                 <p>Python Basics Quiz - Review your performance</p>
+                {% endif %}
             </div>
 
             <div class="score-display">
@@ -771,12 +781,21 @@
             </div>
 
             <div class="navigation">
+                {% if mock_test %}
+                <a href="{% url 'lms:placement_readiness' %}" class="btn">
+                    <i class="fas fa-arrow-left"></i> Back to Placement Readiness
+                </a>
+                <a href="{% url 'lms:mock_test_quiz' mock_test.id %}" class="btn secondary">
+                    <i class="fas fa-redo"></i> Retake Test
+                </a>
+                {% else %}
                 <a href="{% url 'lms:assessment' %}" class="btn">
                     <i class="fas fa-arrow-left"></i> Back to Assessments
                 </a>
                 <a href="{% url 'lms:quiz' %}" class="btn secondary">
                     <i class="fas fa-redo"></i> Retake Quiz
                 </a>
+                {% endif %}
             </div>
         </div>
     </div>

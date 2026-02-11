@@ -254,3 +254,62 @@ class OfferLetter(models.Model):
 
     class Meta:
         ordering = ['-issued_date']
+
+
+class MockTest(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    topic = models.CharField(max_length=100)
+    total_marks = models.PositiveIntegerField(default=100)
+    duration_minutes = models.PositiveIntegerField(default=60)
+    questions = models.JSONField()  # Store questions as JSON
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.title
+
+
+class StudentMockTest(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    mock_test = models.ForeignKey(MockTest, on_delete=models.CASCADE)
+    score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    max_score = models.DecimalField(max_digits=5, decimal_places=2, default=100)
+    submitted_at = models.DateTimeField(null=True, blank=True)
+    is_completed = models.BooleanField(default=False)
+    answers = models.JSONField(blank=True, null=True)  # Store answers as JSON
+    attempt_number = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        ordering = ['-submitted_at']
+
+    def __str__(self):
+        return f"{self.student} - {self.mock_test} (Attempt {self.attempt_number})"
+
+    @property
+    def percentage_score(self):
+        if self.score is not None and self.max_score > 0:
+            return (self.score / self.max_score) * 100
+        return 0
+
+
+class MockInterview(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    requested_date = models.DateTimeField(default=timezone.now)
+    scheduled_date = models.DateTimeField(null=True, blank=True)
+    status = models.CharField(max_length=20, choices=[
+        ('requested', 'Requested'),
+        ('scheduled', 'Scheduled'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled')
+    ], default='requested')
+    feedback = models.TextField(blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"{self.student} - {self.title}"
+
+    class Meta:
+        ordering = ['-requested_date']

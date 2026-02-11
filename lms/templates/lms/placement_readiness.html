@@ -3,71 +3,204 @@
 {% block title %}Placement Readiness - Manac LMS Portal{% endblock %}
 
 {% block content %}
+<style>
+.sidebar {
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    transition: transform 0.3s ease;
+    position: relative;
+    padding-top: 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.sidebar::-webkit-scrollbar {
+    display: none;
+}
+
+.sidebar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255, 107, 107, 0.15), rgba(78, 205, 196, 0.15), rgba(69, 183, 209, 0.15), rgba(254, 202, 87, 0.15), rgba(255, 159, 243, 0.15));
+    background-size: 300% 300%;
+    animation: sidebarGlow 6s ease infinite;
+    pointer-events: none;
+}
+
+@keyframes sidebarGlow {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.sidebar.hidden {
+    width: 60px;
+    transform: translateX(0);
+}
+
+.sidebar.hidden ul li a {
+    padding: 16px 8px;
+    justify-content: center;
+    text-align: center;
+}
+
+.sidebar.hidden ul li a span {
+    display: none;
+}
+
+.sidebar.hidden ul li a i {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+}
+
+.sidebar ul li {
+    margin: 8px 16px;
+    position: relative;
+}
+
+.sidebar ul li a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    border-radius: 15px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar ul li a:hover, .sidebar ul li a.active {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(8px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    color: #fff;
+}
+
+.sidebar ul li a i {
+    width: 20px;
+    text-align: center;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.sidebar ul li a:hover i {
+    transform: scale(1.2) rotate(10deg);
+    color: #4ecdc4;
+}
+
+.main-content {
+    margin-left: 0;
+    margin-top: 70px;
+    padding: 2rem;
+    flex: 1;
+    transition: margin-left 0.3s ease;
+    min-height: calc(100vh - 70px);
+}
+
+.main-content.expanded {
+    margin-left: 0;
+}
+
+.card {
+    padding: 1rem 1rem 1rem 0rem !important;
+}
+
+.card h3 {
+    font-size: 24px !important;
+}
+
+.card h4 {
+    font-size: 16px !important;
+}
+
+.card p {
+    font-size: 14px !important;
+}
+
+
+</style>
 <div class="content-header">
-    <h2>Placement Readiness</h2>
+    <h1>Placement Readiness</h1>
     <p style="color: #7f8c8d;">Track your preparation progress and readiness for placements</p>
 </div>
 
-<!-- Readiness Score -->
-<div class="card" style="text-align: center; margin-bottom: 2rem;">
-    <h3><i class="fas fa-chart-line" style="color: #28a745;"></i> Overall Readiness Score</h3>
-    <div style="font-size: 4rem; font-weight: 900; color: #28a745; margin: 1rem 0;">{{ readiness_score }}%</div>
-    <div style="width: 100%; height: 20px; background: rgba(0,0,0,0.1); border-radius: 10px; overflow: hidden; margin: 1rem 0;">
-        <div style="width: {{ readiness_score }}%; height: 100%; background: linear-gradient(90deg, #28a745, #20c997); border-radius: 10px; transition: width 1s ease;"></div>
+
+
+<!-- Mock Interviews -->
+<div class="card" style="margin-bottom: 2rem;">
+    <h3><i class="fas fa-user-tie" style="color: #dc3545;"></i> Mock Interviews</h3>
+    <div style="text-align: center; margin-bottom: 20px;">
+        <button id="requestInterviewBtn" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">Request Mock Interview</button>
     </div>
-    <p style="color: #666; margin-top: 1rem;">Keep practicing to improve your score!</p>
+    <div style="display: grid; gap: 15px;">
+        {% for interview in mock_interviews %}
+        <div style="display: flex; align-items: center; padding: 15px; border: 1px solid #e0e0e0; border-radius: 10px; background: {% if interview.status == 'completed' %}#e8f5e9{% elif interview.status == 'scheduled' %}#d1ecf1{% else %}#fff3cd{% endif %};">
+            <div style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; {% if interview.status == 'completed' %}background: #28a745; color: white;{% elif interview.status == 'scheduled' %}background: #17a2b8; color: white;{% else %}background: #ffc107; color: white;{% endif %}">
+                <i class="fas fa-{% if interview.status == 'completed' %}check{% elif interview.status == 'scheduled' %}calendar-check{% else %}clock{% endif %}"></i>
+            </div>
+            <div style="flex: 1;">
+                <h4 style="margin: 0 0 5px 0; color: #333;">{{ interview.title }}</h4>
+                {% if interview.scheduled_date %}
+                <p style="margin: 0; color: #666; font-size: 0.9em;">Scheduled: {{ interview.scheduled_date|date:"M d, Y H:i" }}</p>
+                {% else %}
+                <p style="margin: 0; color: #666; font-size: 0.9em;">Requested: {{ interview.requested_date|date:"M d, Y H:i" }}</p>
+                {% endif %}
+
+            </div>
+            <div style="text-align: right;">
+                <span style="padding: 5px 10px; border-radius: 15px; font-size: 0.8em; font-weight: bold; {% if interview.status == 'completed' %}background: #28a745; color: white;{% elif interview.status == 'scheduled' %}background: #17a2b8; color: white;{% else %}background: #ffc107; color: black;{% endif %}">{{ interview.get_status_display }}</span>
+                {% if interview.status == 'requested' %}
+                <button onclick="cancelInterview({{ interview.id }})" style="margin-left: 10px; padding: 5px 10px; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 0.8em;">Cancel</button>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 </div>
 
-<div class="dashboard-grid">
-    <!-- Checklist -->
-    <div class="card">
-        <h3><i class="fas fa-check-square" style="color: #007bff;"></i> Preparation Checklist</h3>
-        <div style="display: grid; gap: 15px;">
-            {% for item in checklist %}
-            <div style="display: flex; align-items: center; padding: 15px; border: 1px solid #e0e0e0; border-radius: 10px; background: {% if item.completed %}#e8f5e9{% else %}#fff3cd{% endif %};">
-                <div style="width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; {% if item.completed %}background: #28a745; color: white;{% else %}background: #ffc107; color: white;{% endif %}">
-                    {% if item.completed %}
-                    <i class="fas fa-check"></i>
-                    {% else %}
-                    <i class="fas fa-clock"></i>
-                    {% endif %}
-                </div>
-                <div>
-                    <h4 style="margin: 0; color: #333;">{{ item.item }}</h4>
-                    <small style="color: {% if item.completed %}#28a745{% else %}#856404{% endif %};">{% if item.completed %}Completed{% else %}Pending{% endif %}</small>
-                </div>
-            </div>
-            {% endfor %}
+<!-- Schedule Mock Interview Form (hidden by default) -->
+<div id="scheduleInterviewForm" style="display: none; margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background: #f9f9f9;">
+    <h4>Request Mock Interview</h4>
+    <form id="interviewForm">
+        {% csrf_token %}
+        <div style="margin-bottom: 10px;">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
         </div>
-    </div>
-
-    <!-- Mock Interviews -->
-    <div class="card">
-        <h3><i class="fas fa-user-tie" style="color: #dc3545;"></i> Mock Interviews</h3>
-        <div style="display: grid; gap: 15px;">
-            {% for interview in mock_interviews %}
-            <div style="display: flex; align-items: center; padding: 15px; border: 1px solid #e0e0e0; border-radius: 10px; background: {% if interview.status == 'completed' %}#e8f5e9{% else %}#d1ecf1{% endif %};">
-                <div style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; {% if interview.status == 'completed' %}background: #28a745; color: white;{% else %}background: #17a2b8; color: white;{% endif %}">
-                    <i class="fas fa-{% if interview.status == 'completed' %}check{% else %}calendar{% endif %}"></i>
-                </div>
-                <div style="flex: 1;">
-                    <h4 style="margin: 0 0 5px 0; color: #333;">{{ interview.title }}</h4>
-                    <p style="margin: 0; color: #666; font-size: 0.9em;">{{ interview.date }}</p>
-                    {% if interview.feedback %}
-                    <p style="margin: 5px 0 0 0; color: #555; font-size: 0.9em;"><strong>Feedback:</strong> {{ interview.feedback }}</p>
-                    {% endif %}
-                </div>
-                <div style="text-align: right;">
-                    <span style="padding: 5px 10px; border-radius: 15px; font-size: 0.8em; font-weight: bold; {% if interview.status == 'completed' %}background: #28a745; color: white;{% else %}background: #17a2b8; color: white;{% endif %}">{{ interview.status|title }}</span>
-                </div>
-            </div>
-            {% endfor %}
+        <div style="margin-bottom: 10px;">
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;"></textarea>
         </div>
-    </div>
+        <div style="margin-bottom: 10px;">
+            <label for="scheduled_date">Requested Date & Time:</label>
+            <input type="datetime-local" id="scheduled_date" name="scheduled_date" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        </div>
+        <button type="submit" style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">Request</button>
+        <button type="button" id="cancelScheduleBtn" style="padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer; margin-left: 10px;">Cancel</button>
+    </form>
 </div>
 
 <!-- Mock Tests -->
-<div class="card">
+<div class="card" style="margin-bottom: 2rem;">
     <h3><i class="fas fa-brain" style="color: #6f42c1;"></i> Mock Tests</h3>
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
         {% for test in mock_tests %}
@@ -82,11 +215,18 @@
             </div>
             {% if test.date %}
             <p style="margin: 0; color: #666; font-size: 0.9em;"><i class="far fa-calendar"></i> {{ test.date }}</p>
+            {% if test.attempts > 1 %}
+            <p style="margin: 0; color: #17a2b8; font-size: 0.8em;"><i class="fas fa-redo"></i> {{ test.attempts }} attempts</p>
+            {% endif %}
             {% endif %}
             {% if test.score %}
             <div style="width: 100%; height: 8px; background: rgba(0,0,0,0.1); border-radius: 4px; overflow: hidden; margin-top: 10px;">
                 <div style="width: {{ test.score }}%; height: 100%; background: {% if test.score >= 80 %}#28a745{% elif test.score >= 60 %}#ffc107{% else %}#dc3545{% endif %}; border-radius: 4px;"></div>
             </div>
+            <a href="{% url 'lms:mock_test_quiz' test.id %}" style="display: inline-block; margin-top: 10px; padding: 6px 12px; background: #6c757d; color: white; text-decoration: none; border-radius: 5px; font-size: 0.8em;">Retake Test</a>
+            {% endif %}
+            {% if not test.score %}
+            <a href="{% url 'lms:mock_test_quiz' test.id %}" style="display: inline-block; margin-top: 10px; padding: 8px 16px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; font-size: 0.9em;">Take Test</a>
             {% endif %}
         </div>
         {% endfor %}
@@ -96,23 +236,87 @@
 <!-- Tips Section -->
 <div class="card">
     <h3><i class="fas fa-lightbulb" style="color: #fd7e14;"></i> Placement Preparation Tips</h3>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
-        <div style="padding: 15px; background: #e3f2fd; border-radius: 10px;">
-            <h4 style="margin: 0 0 10px 0; color: #1976d2;"><i class="fas fa-code"></i> Technical Skills</h4>
-            <p style="margin: 0; color: #555; font-size: 0.9em;">Focus on data structures, algorithms, and system design. Practice coding problems daily.</p>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px;">
+        <div style="padding: 8px; background: #e3f2fd; border-radius: 8px; border: 1px solid #ddd; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <h4 style="margin: 0 0 8px 0; color: #1976d2; font-size: 0.9em;"><i class="fas fa-code"></i> Technical Skills</h4>
+            <p style="margin: 0; color: #555; font-size: 0.8em;">Focus on data structures, algorithms, and system design. Practice coding problems daily.</p>
         </div>
-        <div style="padding: 15px; background: #f3e5f5; border-radius: 10px;">
-            <h4 style="margin: 0 0 10px 0; color: #7b1fa2;"><i class="fas fa-users"></i> Communication</h4>
-            <p style="margin: 0; color: #555; font-size: 0.9em;">Work on verbal communication and presentation skills. Practice explaining concepts clearly.</p>
+        <div style="padding: 8px; background: #f3e5f5; border-radius: 8px; border: 1px solid #ddd; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <h4 style="margin: 0 0 8px 0; color: #7b1fa2; font-size: 0.9em;"><i class="fas fa-users"></i> Communication</h4>
+            <p style="margin: 0; color: #555; font-size: 0.8em;">Work on verbal communication and presentation skills. Practice explaining concepts clearly.</p>
         </div>
-        <div style="padding: 15px; background: #e8f5e9; border-radius: 10px;">
-            <h4 style="margin: 0 0 10px 0; color: #388e3c;"><i class="fas fa-project-diagram"></i> Projects</h4>
-            <p style="margin: 0; color: #555; font-size: 0.9em;">Build real-world projects and maintain an active GitHub profile. Showcase your work effectively.</p>
+        <div style="padding: 8px; background: #e8f5e9; border-radius: 8px; border: 1px solid #ddd; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <h4 style="margin: 0 0 8px 0; color: #388e3c; font-size: 0.9em;"><i class="fas fa-project-diagram"></i> Projects</h4>
+            <p style="margin: 0; color: #555; font-size: 0.8em;">Build real-world projects and maintain an active GitHub profile. Showcase your work effectively.</p>
         </div>
-        <div style="padding: 15px; background: #fff3e0; border-radius: 10px;">
-            <h4 style="margin: 0 0 10px 0; color: #f57c00;"><i class="fas fa-brain"></i> Aptitude</h4>
-            <p style="margin: 0; color: #555; font-size: 0.9em;">Practice quantitative aptitude, logical reasoning, and verbal ability regularly.</p>
+        <div style="padding: 8px; background: #fff3e0; border-radius: 8px; border: 1px solid #ddd; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <h4 style="margin: 0 0 8px 0; color: #f57c00; font-size: 0.9em;"><i class="fas fa-brain"></i> Aptitude</h4>
+            <p style="margin: 0; color: #555; font-size: 0.8em;">Practice quantitative aptitude, logical reasoning, and verbal ability regularly.</p>
         </div>
     </div>
 </div>
+
+
+
+<script>
+document.getElementById('requestInterviewBtn').addEventListener('click', function() {
+    document.getElementById('scheduleInterviewForm').style.display = 'block';
+});
+
+document.getElementById('cancelScheduleBtn').addEventListener('click', function() {
+    document.getElementById('scheduleInterviewForm').style.display = 'none';
+    document.getElementById('interviewForm').reset();
+});
+
+function cancelInterview(interviewId) {
+    if (confirm('Are you sure you want to cancel this interview request?')) {
+        fetch(`{% url "lms:cancel_mock_interview" 0 %}`.replace('0', interviewId), {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                location.reload();
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while cancelling the interview.');
+        });
+    }
+}
+
+document.getElementById('interviewForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+
+    fetch('{% url "lms:schedule_mock_interview" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            location.reload();
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while scheduling the interview.');
+    });
+});
+</script>
 {% endblock %}

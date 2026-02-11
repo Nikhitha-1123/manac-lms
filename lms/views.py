@@ -2,11 +2,11 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 from django.db import models
-from .models import Student, Session, Attendance, Assessment, StudentAssessment, Project, StudyMaterial, Certificate, JobOpening, JobApplication, Notification, OfferLetter
+from .models import Student, Session, Attendance, Assessment, StudentAssessment, Project, StudyMaterial, Certificate, JobOpening, JobApplication, Notification, OfferLetter, MockTest, StudentMockTest, MockInterview
 import json
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -205,20 +205,55 @@ def placement_readiness(request):
         {'item': 'Portfolio Project', 'completed': True},
     ]
 
-    # Mock mock interviews
-    mock_interviews = [
-        {'title': 'Technical Round 1', 'status': 'completed', 'date': '2023-10-20', 'feedback': 'Strong in JS, need work on CSS Grid.'},
-        {'title': 'HR Round', 'status': 'upcoming', 'date': '2023-11-05'},
-    ]
+    # Fetch real mock interviews from database (exclude scheduled interviews)
+    mock_interviews_queryset = MockInterview.objects.filter(student=student).exclude(status='scheduled')
+    mock_interviews = []
 
-    # Mock mock tests
-    mock_tests = [
-        {'title': 'Aptitude Series A', 'score': 85, 'date': '2023-10-15'},
-        {'title': 'Reasoning Test', 'score': 78, 'date': '2023-10-18'},
-        {'title': 'React Technical Assessment', 'status': 'pending'},
-        {'title': 'JavaScript Fundamentals', 'score': 92, 'date': '2023-10-20'},
-        {'title': 'Data Structures & Algorithms', 'status': 'pending'},
-    ]
+    for interview in mock_interviews_queryset:
+        mock_interviews.append({
+            'id': interview.id,
+            'title': interview.title,
+            'status': interview.status,
+            'status_display': interview.get_status_display(),
+            'date': interview.scheduled_date.strftime('%Y-%m-%d') if interview.scheduled_date else interview.requested_date.strftime('%Y-%m-%d'),
+            'feedback': interview.feedback if interview.feedback else '',
+            'scheduled_date': interview.scheduled_date,
+            'requested_date': interview.requested_date,
+        })
+
+    # Fetch real mock tests from database
+    mock_tests_queryset = MockTest.objects.filter(is_active=True)
+    mock_tests = []
+
+    for mock_test in mock_tests_queryset:
+        # Get the best attempt (highest score) for this student and mock test
+        best_attempt = StudentMockTest.objects.filter(
+            student=student,
+            mock_test=mock_test,
+            is_completed=True
+        ).order_by('-score').first()
+
+        if best_attempt:
+            # Count total attempts
+            total_attempts = StudentMockTest.objects.filter(
+                student=student,
+                mock_test=mock_test,
+                is_completed=True
+            ).count()
+
+            mock_tests.append({
+                'id': mock_test.id,
+                'title': mock_test.title,
+                'score': best_attempt.percentage_score,
+                'date': best_attempt.submitted_at.strftime('%Y-%m-%d') if best_attempt.submitted_at else None,
+                'attempts': total_attempts,
+            })
+        else:
+            mock_tests.append({
+                'id': mock_test.id,
+                'title': mock_test.title,
+                'status': 'pending',
+            })
 
     context = {
         'readiness_score': readiness_score,
@@ -323,12 +358,76 @@ def logout_view(request):
     return redirect('lms:login')
 
 @login_required
-def quiz(request):
-    context = {}
+def quiz(request, mock_test_id=None):
+    if mock_test_id:
+        mock_test = get_object_or_404(MockTest, id=mock_test_id, is_active=True)
+        context = {
+            'mock_test': mock_test,
+            'questions': json.dumps(mock_test.questions),
+            'duration_minutes': mock_test.duration_minutes,
+        }
+    else:
+        # Default quiz (existing behavior)
+        default_questions = [
+            {
+                'question': 'What is the output of print(2 + 3)?',
+                'options': ['5', '23', 'Error', 'None'],
+                'correct': '5'
+            },
+            {
+                'question': 'Which keyword is used to define a function in Python?',
+                'options': ['def', 'function', 'fun', 'define'],
+                'correct': 'def'
+            },
+            {
+                'question': 'What does the len() function return?',
+                'options': ['Length of a string or list', 'Type of variable', 'Memory usage', 'File size'],
+                'correct': 'Length of a string or list'
+            },
+            {
+                'question': 'Which data type is mutable in Python?',
+                'options': ['List', 'Tuple', 'String', 'Integer'],
+                'correct': 'List'
+            },
+            {
+                'question': 'What is the correct way to comment in Python?',
+                'options': ['# This is a comment', '// This is a comment', '/* This is a comment */', '-- This is a comment'],
+                'correct': '# This is a comment'
+            },
+            {
+                'question': 'Which statement is used for conditional execution?',
+                'options': ['if', 'for', 'while', 'def'],
+                'correct': 'if'
+            },
+            {
+                'question': 'What is the built-in function to get user input?',
+                'options': ['print', 'input', 'read', 'get'],
+                'correct': 'input'
+            },
+            {
+                'question': 'What is the result of 3 * 2?',
+                'options': ['6', '32', 'Error', 'None'],
+                'correct': '6'
+            },
+            {
+                'question': 'Which symbol is used for string concatenation?',
+                'options': ['+', '-', '*', '/'],
+                'correct': '+'
+            },
+            {
+                'question': 'What does the break statement do?',
+                'options': ['Ends a loop prematurely', 'Starts a loop', 'Skips to next iteration', 'Ends the program'],
+                'correct': 'Ends a loop prematurely'
+            }
+        ]
+        context = {
+            'questions': json.dumps(default_questions),
+            'duration_minutes': 45,
+        }
     return render(request, 'lms/quiz.html', context)
 
 @login_required
-def quiz_submit(request):
+def quiz_submit(request, mock_test_id=None):
     if request.method == 'POST':
         # Ensure student exists
         student, created = Student.objects.get_or_create(
@@ -349,85 +448,175 @@ def quiz_submit(request):
         except json.JSONDecodeError:
             answers = {}
 
-        # Quiz questions and correct answers
-        questions = [
-            {'correct': '14'},
-            {'correct': 'def'},
-            {'correct': 'Returns the length of a string or list'},
-            {'correct': 'List'},
-            {'correct': '# This is a comment'},
-            {'correct': 'Executes code if a condition is true'},
-            {'correct': 'print'},
-            {'correct': '3'},
-            {'correct': '[]'},
-            {'correct': 'Ends a loop prematurely'}
-        ]
+        if mock_test_id:
+            # Handle mock test submission
+            mock_test = get_object_or_404(MockTest, id=mock_test_id, is_active=True)
+            questions = mock_test.questions
 
-        score = 0
-        total_questions = len(questions)
-        results = []
+            score = 0
+            total_questions = len(questions)
+            results = []
 
-        for i, question in enumerate(questions):
-            user_answer = answers.get(str(i), '')
-            correct = question['correct']
-            is_correct = user_answer == correct
-            if is_correct:
-                score += 1
-            results.append({
-                'question_number': i + 1,
-                'user_answer': user_answer,
-                'correct_answer': correct,
-                'is_correct': is_correct
-            })
+            for i, question in enumerate(questions):
+                user_answer = answers.get(str(i), '')
+                correct = question['correct']
+                is_correct = user_answer == correct
+                if is_correct:
+                    score += 1
+                results.append({
+                    'question_number': i + 1,
+                    'user_answer': user_answer,
+                    'correct_answer': correct,
+                    'is_correct': is_correct
+                })
 
-        percentage = (score / total_questions) * 100
-        incorrect = total_questions - score
+            percentage = (score / total_questions) * 100 if total_questions > 0 else 0
+            incorrect = total_questions - score
 
-        # Save to database
-        assessment, created = Assessment.objects.get_or_create(
-            title='Python Basics Quiz',
-            defaults={
-                'description': 'Test your knowledge of Python fundamentals',
-                'topic': 'Python Programming',
-                'total_marks': 10,
-                'duration_minutes': 45,
-                'due_date': timezone.now() + timezone.timedelta(days=30),
-                'is_active': True
+            # Get the next attempt number for this student and mock test
+            last_attempt = StudentMockTest.objects.filter(
+                student=student,
+                mock_test=mock_test
+            ).order_by('-attempt_number').first()
+
+            attempt_number = (last_attempt.attempt_number + 1) if last_attempt else 1
+
+            # Save to StudentMockTest (always create new record for each attempt)
+            student_mock_test = StudentMockTest.objects.create(
+                student=student,
+                mock_test=mock_test,
+                score=score,
+                max_score=mock_test.total_marks,
+                answers=answers,
+                submitted_at=timezone.now(),
+                is_completed=True,
+                attempt_number=attempt_number
+            )
+
+            context = {
+                'mock_test': mock_test,
+                'score': score,
+                'total_questions': total_questions,
+                'percentage': round(percentage, 1),
+                'incorrect': incorrect,
+                'results': results
             }
-        )
+        else:
+            # Default quiz (existing behavior)
+            questions = [
+                {'correct': '14'},
+                {'correct': 'def'},
+                {'correct': 'Returns the length of a string or list'},
+                {'correct': 'List'},
+                {'correct': '# This is a comment'},
+                {'correct': 'Executes code if a condition is true'},
+                {'correct': 'print'},
+                {'correct': '3'},
+                {'correct': '[]'},
+                {'correct': 'Ends a loop prematurely'}
+            ]
 
-        student_assessment, created = StudentAssessment.objects.get_or_create(
-            student=student,
-            assessment=assessment,
-            defaults={
-                'max_score': 10,
-                'answers': answers,
-                'submitted_at': timezone.now(),
-                'is_completed': True
+            score = 0
+            total_questions = len(questions)
+            results = []
+
+            for i, question in enumerate(questions):
+                user_answer = answers.get(str(i), '')
+                correct = question['correct']
+                is_correct = user_answer == correct
+                if is_correct:
+                    score += 1
+                results.append({
+                    'question_number': i + 1,
+                    'user_answer': user_answer,
+                    'correct_answer': correct,
+                    'is_correct': is_correct
+                })
+
+            percentage = (score / total_questions) * 100
+            incorrect = total_questions - score
+
+            # Save to database
+            assessment, created = Assessment.objects.get_or_create(
+                title='Python Basics Quiz',
+                defaults={
+                    'description': 'Test your knowledge of Python fundamentals',
+                    'topic': 'Python Programming',
+                    'total_marks': 10,
+                    'duration_minutes': 45,
+                    'due_date': timezone.now() + timezone.timedelta(days=30),
+                    'is_active': True
+                }
+            )
+
+            student_assessment, created = StudentAssessment.objects.get_or_create(
+                student=student,
+                assessment=assessment,
+                defaults={
+                    'max_score': 10,
+                    'answers': answers,
+                    'submitted_at': timezone.now(),
+                    'is_completed': True
+                }
+            )
+            student_assessment.score = score
+            student_assessment.answers = answers
+            student_assessment.submitted_at = timezone.now()
+            student_assessment.is_completed = True
+            student_assessment.save()
+
+            context = {
+                'score': score,
+                'total_questions': total_questions,
+                'percentage': round(percentage, 1),
+                'incorrect': incorrect,
+                'results': results
             }
-        )
-        student_assessment.score = score
-        student_assessment.answers = answers
-        student_assessment.submitted_at = timezone.now()
-        student_assessment.is_completed = True
-        student_assessment.save()
-
-        context = {
-            'score': score,
-            'total_questions': total_questions,
-            'percentage': round(percentage, 1),
-            'incorrect': incorrect,
-            'results': results
-        }
 
         return render(request, 'lms/quiz_results.html', context)
 
     return JsonResponse({'error': 'Invalid request method'})
 
 @login_required
+def schedule_mock_interview(request):
+    if request.method == 'POST':
+        student = get_object_or_404(Student, user=request.user)
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        requested_date_str = request.POST.get('scheduled_date')
+
+        if title and requested_date_str:
+            from datetime import datetime
+            requested_date = datetime.strptime(requested_date_str, '%Y-%m-%dT%H:%M')
+            MockInterview.objects.create(
+                student=student,
+                title=title,
+                description=description,
+                requested_date=requested_date,
+                status='requested'
+            )
+            return JsonResponse({'success': True, 'message': 'Mock interview request submitted successfully!'})
+
+        return JsonResponse({'success': False, 'message': 'Please provide all required fields.'})
+
+    return JsonResponse({'success': False, 'message': 'Invalid request method.'})
+
+@login_required
+def cancel_mock_interview(request, interview_id):
+    if request.method == 'POST':
+        student = get_object_or_404(Student, user=request.user)
+        interview = get_object_or_404(MockInterview, id=interview_id, student=student, status='requested')
+        interview.delete()
+        return JsonResponse({'success': True, 'message': 'Mock interview request cancelled successfully!'})
+
+    return JsonResponse({'success': False, 'message': 'Invalid request method.'})
+
+@login_required
 def download_offer_letter(request):
     student = get_object_or_404(Student, user=request.user)
-    offer_letter = get_object_or_404(OfferLetter, student=student)
+    offer_letter = OfferLetter.objects.filter(student=student).order_by('-issued_date').first()
+    if not offer_letter:
+        raise Http404("Offer letter not found")
 
     # Create a buffer for the PDF
     buffer = BytesIO()

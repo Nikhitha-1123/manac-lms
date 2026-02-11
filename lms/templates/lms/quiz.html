@@ -388,13 +388,15 @@
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border-radius: 20px;
-            padding: 2rem;
+            padding: 1rem;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             height: fit-content;
             position: relative;
             overflow: hidden;
+            max-width: 500px;
+            margin: 0 auto;
         }
 
         .card:hover {
@@ -436,10 +438,13 @@
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
             border-radius: 16px;
-            padding: 25px;
+            padding: 8px;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
             margin-bottom: 20px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .question-number {
@@ -588,7 +593,7 @@
     </div>
 
     <div class="container">
-        <form id="quiz-form" method="POST" action="{% url 'lms:quiz_submit' %}">
+        <form id="quiz-form" method="POST" action="{% if mock_test %}{% url 'lms:mock_test_quiz_submit' mock_test.id %}{% else %}{% url 'lms:quiz_submit' %}{% endif %}">
             {% csrf_token %}
             <input type="hidden" name="answers" id="answers-input">
             <div class="sidebar">
@@ -602,31 +607,41 @@
                 <li data-tooltip="Assessment"><a href="{% url 'lms:assessment' %}" class="active"><i class="fas fa-clipboard-check"></i> <span>Assessment</span></a></li>
                 <li data-tooltip="Study Material"><a href="{% url 'lms:study_material' %}"><i class="fas fa-book"></i> <span>Study Material</span></a></li>
                 <li data-tooltip="Certificate"><a href="{% url 'lms:certificate' %}"><i class="fas fa-certificate"></i> <span>Certificate</span></a></li>
+                {% if not mock_test %}
                 <li data-tooltip="Placement Readiness"><a href="{% url 'lms:placement_readiness' %}"><i class="fas fa-chart-line"></i> <span>Placement Readiness</span></a></li>
+                {% endif %}
             </ul>
         </div>
 
         <div class="main-content" id="main-content">
             <div class="quiz-header">
-                <h2>Python Basics Quiz</h2>y
+                {% if mock_test %}
+                <h2>{{ mock_test.title }}</h2>
+                <p>{{ mock_test.description }}</p>
+                {% else %}
+                <h2>Python Basics Quiz</h2>
                 <p>Test your knowledge of Python fundamentals</p>
+                {% endif %}
             </div>
 
             <div class="progress-bar">
                 <div class="progress-fill" id="progress-fill"></div>
             </div>
 
-            <div class="timer" id="timer">45:00</div>
+            <div class="timer" id="timer">
+                {% if mock_test %}
+                {{ mock_test.duration_minutes }}:00
+                {% else %}
+                45:00
+                {% endif %}
+            </div>
 
             <div class="card">
                 <div class="question-card" id="question-card">
-                    <div class="question-number">Question 1 of 10</div>
-                    <div class="question-text">What is the output of the following Python code?<br><br><code>print(2 + 3 * 4)</code></div>
-                    <div class="options">
-                        <div class="option" data-value="14">14</div>
-                        <div class="option" data-value="20">20</div>
-                        <div class="option" data-value="24">24</div>
-                        <div class="option" data-value="11">11</div>
+                    <div class="question-number">Question 1 of {{ questions|length }}</div>
+                    <div class="question-text" id="question-text">Loading...</div>
+                    <div class="options" id="options">
+                        <!-- Options will be populated by JavaScript -->
                     </div>
                 </div>
 
@@ -677,63 +692,19 @@
 
             // Quiz functionality
             let currentQuestion = 0;
-            const totalQuestions = 10;
+            let totalQuestions = 10;
             let timeLeft = 45 * 60; // 45 minutes in seconds
             let timerInterval;
             let userAnswers = {}; // Store answers for all questions
 
-            const questions = [
-                {
-                    question: "What is the output of the following Python code?<br><br><code>print(2 + 3 * 4)</code>",
-                    options: ["14", "20", "24", "11"],
-                    correct: "14"
-                },
-                {
-                    question: "Which of the following is used to define a function in Python?",
-                    options: ["def", "function", "fun", "define"],
-                    correct: "def"
-                },
-                {
-                    question: "What does the 'len()' function do?",
-                    options: ["Returns the length of a string or list", "Returns the last element", "Returns the first element", "Sorts the list"],
-                    correct: "Returns the length of a string or list"
-                },
-                {
-                    question: "Which data type is mutable in Python?",
-                    options: ["Tuple", "String", "List", "Integer"],
-                    correct: "List"
-                },
-                {
-                    question: "What is the correct way to create a comment in Python?",
-                    options: ["// This is a comment", "# This is a comment", "/* This is a comment */", "<!-- This is a comment -->"],
-                    correct: "# This is a comment"
-                },
-                {
-                    question: "What does the 'if' statement do in Python?",
-                    options: ["Loops through items", "Executes code if a condition is true", "Defines a function", "Imports a module"],
-                    correct: "Executes code if a condition is true"
-                },
-                {
-                    question: "Which of the following is not a Python keyword?",
-                    options: ["if", "for", "print", "while"],
-                    correct: "print"
-                },
-                {
-                    question: "What is the result of 10 // 3 in Python?",
-                    options: ["3.33", "3", "4", "3.0"],
-                    correct: "3"
-                },
-                {
-                    question: "How do you create a list in Python?",
-                    options: ["{}", "[]", "()", "<>"],
-                    correct: "[]"
-                },
-                {
-                    question: "What does the 'break' statement do?",
-                    options: ["Starts a loop", "Ends a loop prematurely", "Skips to the next iteration", "Returns a value"],
-                    correct: "Ends a loop prematurely"
-                }
-            ];
+            // Get questions from Django context
+            const questions = JSON.parse('{{ questions|escapejs }}');
+
+            // Update totalQuestions and timeLeft based on context
+            totalQuestions = questions.length;
+            {% if mock_test %}
+            timeLeft = {{ mock_test.duration_minutes }} * 60;
+            {% endif %}
 
             function updateProgress() {
                 const progress = ((currentQuestion + 1) / totalQuestions) * 100;
@@ -758,20 +729,24 @@
                 document.querySelector('.question-number').textContent = `Question ${currentQuestion + 1} of ${totalQuestions}`;
                 document.querySelector('.question-text').innerHTML = question.question;
 
-                const options = document.querySelectorAll('.option');
-                options.forEach((option, index) => {
-                    option.textContent = question.options[index];
-                    option.classList.remove('selected');
-                    // Check if this option was previously selected for this question
-                    if (userAnswers[currentQuestion] === question.options[index]) {
-                        option.classList.add('selected');
+                // Clear existing options
+                const optionsContainer = document.getElementById('options');
+                optionsContainer.innerHTML = '';
+
+                // Create new options
+                question.options.forEach((option, index) => {
+                    const optionDiv = document.createElement('div');
+                    optionDiv.className = 'option';
+                    optionDiv.textContent = option;
+                    if (userAnswers[currentQuestion] === option) {
+                        optionDiv.classList.add('selected');
                     }
-                    option.onclick = function() {
-                        options.forEach(opt => opt.classList.remove('selected'));
+                    optionDiv.onclick = function() {
+                        document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
                         this.classList.add('selected');
-                        // Store the answer
                         userAnswers[currentQuestion] = this.textContent.trim();
                     };
+                    optionsContainer.appendChild(optionDiv);
                 });
 
                 document.getElementById('prev-btn').disabled = currentQuestion === 0;
