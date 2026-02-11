@@ -42,21 +42,7 @@ def test_quiz_submission():
         'csrfmiddlewaretoken': 'dummy'  # Django test client handles CSRF
     })
 
-    print(f"Response status: {response.status_code}")
-    print(f"Response content: {response.content.decode()[:500]}...")
-
-    # Check if StudentAssessment was created
-    assessment = Assessment.objects.filter(title='Python Basics Quiz').first()
-    if assessment:
-        student_assessment = StudentAssessment.objects.filter(student=student, assessment=assessment).first()
-        if student_assessment:
-            print(f"Score saved: {student_assessment.score}")
-            print(f"Is completed: {student_assessment.is_completed}")
-            print(f"Answers saved: {student_assessment.answers}")
-        else:
-            print("StudentAssessment not found")
-    else:
-        print("Assessment not found")
+    # Cleanup
 
     # Cleanup
     user.delete()

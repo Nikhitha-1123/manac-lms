@@ -320,10 +320,7 @@ def create_mock_tests():
                 'is_active': True
             }
         )
-        if created:
-            print(f"Created mock test: {mock_test.title}")
-        else:
-            print(f"Mock test already exists: {mock_test.title}")
+        pass
 
 if __name__ == '__main__':
     create_mock_tests()

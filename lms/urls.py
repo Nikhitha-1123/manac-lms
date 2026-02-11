@@ -21,7 +21,6 @@ urlpatterns = [
     path('quiz-submit/<int:mock_test_id>/', views.quiz_submit, name='mock_test_quiz_submit'),
     path('study-material/', views.study_material, name='study_material'),
     path('certificate/', views.certificate, name='certificate'),
-    path('placement-form/', views.placement_form, name='placement_form'),
     path('placement-readiness/', views.placement_readiness, name='placement_readiness'),
     path('profile/', views.profile, name='profile'),
     path('edit-profile/', views.edit_profile, name='edit_profile'),

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Student, Session, Attendance, Assessment, StudentAssessment, Project, StudyMaterial, Certificate, JobOpening, JobApplication, Notification
+from .models import Student, Session, Attendance, Assessment, StudentAssessment, Project, StudyMaterial, Certificate, Notification
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
@@ -50,17 +50,7 @@ class CertificateAdmin(admin.ModelAdmin):
     list_filter = ('issued_date',)
     search_fields = ('student__user__username', 'student__full_name', 'title', 'verification_code')
 
-@admin.register(JobOpening)
-class JobOpeningAdmin(admin.ModelAdmin):
-    list_display = ('title', 'company', 'location', 'salary_range', 'is_active', 'posted_at')
-    list_filter = ('is_active', 'location', 'posted_at')
-    search_fields = ('title', 'company', 'description', 'requirements')
 
-@admin.register(JobApplication)
-class JobApplicationAdmin(admin.ModelAdmin):
-    list_display = ('student', 'job_opening', 'applied_at', 'status')
-    list_filter = ('status', 'applied_at', 'job_opening__company')
-    search_fields = ('student__user__username', 'student__full_name', 'job_opening__title')
 
 @admin.register(Notification)
 class NotificationAdmin(admin.ModelAdmin):

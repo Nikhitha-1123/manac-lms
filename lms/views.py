@@ -6,7 +6,7 @@ from django.http import JsonResponse, HttpResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 from django.db import models
-from .models import Student, Session, Attendance, Assessment, StudentAssessment, Project, StudyMaterial, Certificate, JobOpening, JobApplication, Notification, OfferLetter, MockTest, StudentMockTest, MockInterview
+from .models import Student, Session, Attendance, Assessment, StudentAssessment, Project, StudyMaterial, Certificate, Notification, OfferLetter, MockTest, StudentMockTest, MockInterview
 import json
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -34,12 +34,17 @@ def dashboard(request):
     # Get recent sessions
     upcoming_sessions = Session.objects.filter(date__gte=timezone.now().date(), is_completed=False).order_by('date', 'start_time')[:3]
 
-    # Sample data for stats
-    attendance_percentage = 85.5
-    total_sessions = 20
-    attended_sessions = 17
-    total_assessments = 10
-    completed_assessments = 7
+    # Get assessments data
+    assessments = Assessment.objects.filter(is_active=True)
+    student_assessments = StudentAssessment.objects.filter(student=student, assessment__in=assessments)
+
+    # Calculate real attendance stats
+    attendances = Attendance.objects.filter(student=student)
+    total_sessions = attendances.count()
+    attended_sessions = attendances.filter(is_present=True).count()
+    attendance_percentage = (attended_sessions / total_sessions * 100) if total_sessions > 0 else 0
+    total_assessments = assessments.count()
+    completed_assessments = student_assessments.filter(is_completed=True).count()
 
     # Sample recent activity
     recent_projects = [
@@ -160,35 +165,7 @@ def certificate(request):
     context = {'certificates': certificates, 'student': student}
     return render(request, 'lms/certificate.html', context)
 
-@login_required
-def placement_form(request):
-    student = get_object_or_404(Student, user=request.user)
-    job_openings = JobOpening.objects.filter(is_active=True)
-    applications = JobApplication.objects.filter(student=student).select_related('job_opening')
 
-    if request.method == 'POST':
-        selected_jobs = request.POST.getlist('job_opening')
-        for job_id in selected_jobs:
-            job = get_object_or_404(JobOpening, id=job_id)
-            if not applications.filter(job_opening=job).exists():
-                JobApplication.objects.create(student=student, job_opening=job)
-
-        # Update student profile
-        student.phone = request.POST.get('phone', student.phone)
-        student.address = request.POST.get('address', student.address)
-        student.linkedin_profile = request.POST.get('linkedin', student.linkedin_profile)
-        student.github_profile = request.POST.get('github', student.github_profile)
-        student.portfolio = request.POST.get('portfolio', student.portfolio)
-        student.save()
-
-        return JsonResponse({'success': True, 'message': 'Application submitted successfully!'})
-
-    context = {
-        'job_openings': job_openings,
-        'student': student,
-        'applications': applications,
-    }
-    return render(request, 'lms/placement_form.html', context)
 
 @login_required
 def placement_readiness(request):
