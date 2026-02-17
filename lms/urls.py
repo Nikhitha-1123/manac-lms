@@ -29,5 +29,6 @@ urlpatterns = [
     path('submit-project/', views.submit_project, name='submit_project'),
     path('schedule-mock-interview/', views.schedule_mock_interview, name='schedule_mock_interview'),
     path('cancel-mock-interview/<int:interview_id>/', views.cancel_mock_interview, name='cancel_mock_interview'),
+    path('internship-agenda/', views.internship_agenda, name='internship_agenda'),
     path('download-offer-letter/', views.download_offer_letter, name='download_offer_letter'),
 ]

@@ -313,3 +313,18 @@ class MockInterview(models.Model):
 
     class Meta:
         ordering = ['-requested_date']
+
+
+class InternshipAgenda(models.Model):
+    week = models.CharField(max_length=50)  # e.g., "Week 1"
+    agenda = models.TextField()  # Description of activities
+    deliverables = models.TextField(blank=True)  # Student deliverables
+    notes = models.TextField(blank=True)  # Additional notes
+    responsibilities = models.TextField(blank=True)  # Roles and responsibilities
+    order = models.PositiveIntegerField(default=0)  # For ordering weeks
+
+    def __str__(self):
+        return self.week
+
+    class Meta:
+        ordering = ['order']

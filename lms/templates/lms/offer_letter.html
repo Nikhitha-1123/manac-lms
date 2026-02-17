@@ -82,12 +82,6 @@
             gap: 1rem;
         }
 
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
         .header h2 {
             margin: 0;
             font-weight: 700;
@@ -98,172 +92,18 @@
         }
 
         .menu-toggle {
-            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 50%, #45b7d1 100%);
+            background: none;
             border: none;
-            color: white;
-            font-size: 1.2rem;
+            color: #333;
+            font-size: 18px;
             cursor: pointer;
-            padding: 12px;
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-            transform: translateZ(0);
-            position: relative;
-            overflow: hidden;
+            padding: 5px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
         }
 
         .menu-toggle:hover {
-            transform: translateY(-2px) scale(1.05) rotate(5deg);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
-        }
-
-        .notification-icon {
-            position: relative;
-            padding: 10px;
-            cursor: pointer;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .notification-icon:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.1);
-        }
-
-        .notification-icon i {
-            font-size: 1.2rem;
-            color: #666;
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: #ff4757;
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            font-weight: bold;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        .profile-section {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            position: relative;
-            padding: 8px 16px;
-            border-radius: 25px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            transition: all 0.3s ease;
-            overflow: hidden;
-        }
-
-        .profile-section:hover {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.2) 100%);
-            transform: translateY(-1px) scale(1.02);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .profile-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #feca57, #ff9ff3);
-            background-size: 300% 300%;
-            animation: avatarGlow 2s ease infinite;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: white;
-            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4), 0 0 0 2px rgba(255, 255, 255, 0.3);
-            transform: translateZ(0);
-            position: relative;
-            overflow: hidden;
-        }
-
-        @keyframes avatarGlow {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        .profile-dropdown {
-            position: fixed;
-            top: 70px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 16px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            min-width: 200px;
-            display: none;
-            z-index: 99999;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            overflow: hidden;
-        }
-
-        .profile-dropdown.show {
-            display: block;
-        }
-
-        .profile-dropdown a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 16px 20px;
-            color: #333;
-            text-decoration: none;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .profile-dropdown a::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
-            transition: left 0.5s;
-        }
-
-        .profile-dropdown a:hover::before {
-            left: 100%;
-        }
-
-        .profile-dropdown a:hover {
-            background: linear-gradient(135deg, rgba(144, 202, 249, 0.2), rgba(165, 214, 167, 0.2));
-            transform: translateX(5px);
-        }
-
-        .profile-dropdown a:last-child {
-            border-bottom: none;
-        }
-
-        .profile-dropdown a i {
-            width: 16px;
-            text-align: center;
+            background-color: rgba(0,0,0,0.05);
         }
 
         .sidebar {
@@ -300,26 +140,6 @@
         @keyframes sidebarGlow {
             0%, 100% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
-        }
-
-        .sidebar.hidden {
-            width: 60px;
-            transform: translateX(0);
-        }
-
-        .sidebar.hidden ul li a {
-            padding: 16px 8px;
-            justify-content: center;
-            text-align: center;
-        }
-
-        .sidebar.hidden ul li a span {
-            display: none;
-        }
-
-        .sidebar.hidden ul li a i {
-            margin: 0;
-            font-size: 1.2rem;
         }
 
         .sidebar ul {
@@ -372,44 +192,16 @@
         .main-content {
             margin-left: 0;
             margin-top: 70px;
-            padding: 2rem;
+            padding: 0.5rem 2rem 2rem;
             flex: 1;
             transition: margin-left 0.3s ease;
-            min-height: calc(100vh - 70px);
+            min-height: 100vh;
             z-index: 1;
             position: relative;
         }
 
         .main-content.expanded {
-            margin-left: 0;
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            height: fit-content;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card:hover {
-            transform: translateY(-5px) scale(1.01);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-            z-index: 10;
-        }
-
-        .card h3 {
-            color: #333;
-            margin-bottom: 1.5rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            margin-left: 60px;
         }
 
         .content-header {
@@ -423,12 +215,13 @@
             margin-bottom: 10px;
         }
 
-        .offer-letter-container {
+        /* Official Letter Styles */
+        .letter-container {
             max-width: 900px;
             margin: 0 auto;
         }
 
-        .offer-letter {
+        .official-letter {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border-radius: 20px;
@@ -439,99 +232,298 @@
             overflow: hidden;
         }
 
-        .offer-letter::before {
+        .official-letter::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 5px;
-            background: linear-gradient(90deg, #007bff, #00d2ff);
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c);
         }
 
+        /* Company Header */
         .company-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
+            text-align: center;
             border-bottom: 2px solid #f1f1f1;
             padding-bottom: 20px;
             margin-bottom: 30px;
         }
 
-        .company-info h1 {
-            margin: 0;
-            font-size: 28px;
-            color: #333;
-            letter-spacing: -0.5px;
-        }
-
-        .company-info p {
-            margin: 5px 0 0;
-            color: #888;
-            font-size: 16px;
-        }
-
-        .confidential-badge {
-            background: #e3f2fd;
-            color: #1565c0;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12px;
+        .company-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
             font-weight: bold;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .company-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .company-tagline {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .company-address {
+            font-size: 12px;
+            color: #888;
+            margin-top: 15px;
+        }
+
+        /* Letter Title */
+        .letter-title {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .letter-title h1 {
+            font-size: 20px;
+            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
             display: inline-block;
         }
 
-        .date-info {
-            color: #555;
+        /* Letter Meta */
+        .letter-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
             font-size: 14px;
-            margin-top: 10px;
         }
 
-        .letter-content {
+        .ref-no {
+            color: #666;
+        }
+
+        .ref-no strong {
+            color: #333;
+        }
+
+        .letter-date {
+            color: #666;
+        }
+
+        /* Salutation */
+        .salutation {
+            margin-bottom: 25px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .salutation p {
+            margin-bottom: 8px;
+        }
+
+        /* Letter Body */
+        .letter-body {
+            font-size: 14px;
             color: #444;
             line-height: 1.8;
-            font-size: 16px;
+            text-align: justify;
         }
 
-        .letter-content p {
-            margin-bottom: 1rem;
+        .letter-body p {
+            margin-bottom: 15px;
         }
 
-        .letter-content strong {
-            color: #007bff;
+        .offer-position {
+            font-weight: bold;
+            color: #667eea;
         }
 
-        .offer-details {
-            background: #f8f9fa;
+        /* Job Details Table */
+        .job-details {
+            margin: 25px 0;
             border: 1px solid #e9ecef;
             border-radius: 12px;
-            padding: 25px;
-            margin: 25px 0;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            overflow: hidden;
         }
 
-        .detail-item {
+        .job-details-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .job-details-table th,
+        .job-details-table td {
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid #f1f1f1;
+            font-size: 13px;
+        }
+
+        .job-details-table th {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            color: #333;
+            font-weight: 600;
+            width: 40%;
+        }
+
+        .job-details-table td {
+            color: #444;
+        }
+
+        .job-details-table tr:last-child th,
+        .job-details-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .job-details-table tr:hover {
+            background: rgba(102, 126, 234, 0.03);
+        }
+
+        /* Section Headers */
+        .section-header {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 25px 0 15px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        /* Terms List */
+        .terms-list {
+            font-size: 13px;
+            color: #444;
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+
+        .terms-list li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        /* Benefits Section */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .benefit-item i {
+            color: #667eea;
+        }
+
+        /* Acceptance Section */
+        .acceptance-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .acceptance-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .acceptance-checkbox input[type="checkbox"] {
+            margin-top: 3px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        .acceptance-text {
+            line-height: 1.6;
+        }
+
+        /* Signature Section */
+        .signature-section {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .signature-block {
+            width: 45%;
             text-align: center;
         }
 
-        .detail-label {
+        .signature-line {
+            border-top: 2px solid #667eea;
+            margin: 40px 0 10px;
+            padding-top: 10px;
+        }
+
+        .signature-label {
             font-size: 13px;
-            color: #888;
-            margin-bottom: 8px;
+            color: #666;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
         }
 
-        .detail-value {
-            font-weight: 600;
+        .signature-name {
+            font-size: 15px;
+            font-weight: bold;
             color: #333;
-            font-size: 16px;
+            margin-top: 8px;
         }
 
+        .signature-title {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Company Seal */
+        .company-seal {
+            width: 100px;
+            height: 100px;
+            border: 2px solid #667eea;
+            border-radius: 50%;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #667eea;
+            font-size: 10px;
+            text-transform: uppercase;
+            text-align: center;
+            line-height: 1.3;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        /* Action Buttons */
         .action-buttons {
-            margin-top: 40px;
+            margin-top: 30px;
             text-align: center;
             display: flex;
             justify-content: center;
@@ -539,37 +531,72 @@
         }
 
         .btn {
-            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 50%, #feca57 100%);
-            color: white;
-            padding: 15px 30px;
+            padding: 14px 30px;
             border: none;
-            border-radius: 15px;
+            border-radius: 12px;
             cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            font-weight: 600;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
-            position: relative;
-            overflow: hidden;
+            gap: 8px;
         }
 
-        .btn:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(129, 199, 132, 0.4);
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
         }
 
-        .btn.secondary {
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-secondary {
             background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            color: white;
             box-shadow: 0 8px 25px rgba(108, 117, 125, 0.4);
         }
 
-        .btn.secondary:hover {
+        .btn-secondary:hover {
+            transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(108, 117, 125, 0.6);
         }
 
+        .btn-success {
+            background: linear-gradient(135deg, #2ed573 0%, #1e90ff 100%);
+            color: white;
+            box-shadow: 0 8px 25px rgba(46, 213, 115, 0.4);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(46, 213, 115, 0.6);
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-accepted {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+        }
+
+        .status-pending {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%);
+            color: #856404;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -583,15 +610,24 @@
                 display: block;
             }
 
-            .header h2 {
-                font-size: 1.2rem;
+            .official-letter {
+                padding: 2rem;
             }
 
-            .card {
-                padding: 1.5rem;
+            .job-details {
+                overflow-x: auto;
             }
 
-            .offer-details {
+            .signature-section {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .signature-block {
+                width: 100%;
+            }
+
+            .benefits-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -610,23 +646,6 @@
             </button>
             <h2><i class="fas fa-graduation-cap"></i> Manac LMS Portal</h2>
         </div>
-        <div class="header-right">
-            <div class="notification-icon" id="notification-icon">
-                <i class="fas fa-bell"></i>
-                <span class="notification-badge">3</span>
-            </div>
-            <div class="profile-section" id="profile-section">
-                <div class="profile-avatar">{{ user.get_full_name|slice:":1"|upper|default:user.username|slice:":1"|upper }}</div>
-                <span>{{ user.get_full_name|default:user.username }}</span>
-                <i class="fas fa-chevron-down"></i>
-            </div>
-            <div class="profile-dropdown" id="profile-dropdown">
-                <a href="{% url 'lms:profile' %}" id="my-profile"><i class="fas fa-user"></i> My Profile</a>
-                <a href="{% url 'lms:edit_profile' %}" id="edit-profile"><i class="fas fa-edit"></i> Edit Profile</a>
-                <a href="{% url 'lms:change_password' %}" id="change-password"><i class="fas fa-lock"></i> Change Password</a>
-                <a href="{% url 'lms:logout' %}" id="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
-            </div>
-        </div>
     </div>
 
     <div class="container">
@@ -634,6 +653,7 @@
             <ul>
                 <li data-tooltip="Dashboard"><a href="{% url 'lms:dashboard' %}"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
                 <li data-tooltip="Offer Letter"><a href="{% url 'lms:offer_letter' %}" class="active"><i class="fas fa-file-contract"></i> <span>Offer Letter</span></a></li>
+                <li data-tooltip="Internship Agenda"><a href="{% url 'lms:internship_agenda' %}"><i class="fas fa-calendar-check"></i> <span>Internship Agenda</span></a></li>
                 <li data-tooltip="Session Details"><a href="{% url 'lms:session_details' %}"><i class="fas fa-calendar-alt"></i> <span>Session Details</span></a></li>
                 <li data-tooltip="Session Recordings"><a href="{% url 'lms:session_recordings' %}"><i class="fas fa-video"></i> <span>Session Recordings</span></a></li>
                 <li data-tooltip="Attendance"><a href="{% url 'lms:attendance' %}"><i class="fas fa-user-check"></i> <span>Attendance</span></a></li>
@@ -641,101 +661,230 @@
                 <li data-tooltip="Assessment"><a href="{% url 'lms:assessment' %}"><i class="fas fa-clipboard-check"></i> <span>Assessment</span></a></li>
                 <li data-tooltip="Study Material"><a href="{% url 'lms:study_material' %}"><i class="fas fa-book"></i> <span>Study Material</span></a></li>
                 <li data-tooltip="Certificate"><a href="{% url 'lms:certificate' %}"><i class="fas fa-certificate"></i> <span>Certificate</span></a></li>
-
                 <li data-tooltip="Placement Readiness"><a href="{% url 'lms:placement_readiness' %}"><i class="fas fa-chart-line"></i> <span>Placement Readiness</span></a></li>
             </ul>
         </div>
 
         <div class="main-content" id="main-content">
-            <div class="content-header">
-                <h2>Offer Letter</h2>
-                <p style="color: #7f8c8d;">Your internship offer from Manac Infotech</p>
-            </div>
+        <div class="content-header">
+            <h2>Official Offer Letter</h2>
+            <p style="color: #666; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                {% if offer_letter.is_accepted %}
+                <span class="status-badge status-accepted"><i class="fas fa-check-circle"></i> Accepted</span>
+                {% else %}
+                <span class="status-badge status-pending"><i class="fas fa-clock"></i> Pending Acceptance</span>
+                {% endif %}
+            </p>
+        </div>
 
-            <div class="offer-letter-container">
-                <div class="offer-letter">
-                    <div class="company-header">
-                        <div class="company-info">
-                            <h1>Manac Infotech Pvt Ltd</h1>
-                            <p>Excellence in Technology</p>
+        <div class="letter-container">
+            <div class="official-letter">
+                <!-- Company Header -->
+                <div class="company-header">
+          
+                    <div class="company-name">MANAC INFOTECH PVT LTD</div>
+                    <div class="company-tagline">Excellence in Technology</div>
+                    <div class="company-address">
+                        Gaddiannaram , Dilsukhnagar , Metro pillar :1515<br>
+                        Hyderabad, Telangana - 500081<br>
+                        Tel: +91 9291430931 | Email: hr@manacinfotech.com
+                    </div>
+                </div>
+
+                <!-- Letter Title -->
+                <div class="letter-title">
+                    <h1>Letter of Appointment</h1>
+                </div>
+
+                <!-- Letter Meta Information -->
+                <div class="letter-meta">
+                    <div class="ref-no">
+                        <strong>Ref No:</strong> MANAC/HR/{% now "Y" %}/{{ offer_letter.id|stringformat:"04d" }}
+                    </div>
+                    <div class="letter-date">
+                        <strong>Date:</strong> {{ offer_letter.issued_date|date:"d M Y" }}
+                    </div>
+                </div>
+
+                <!-- Salutation -->
+                <div class="salutation">
+                    <p>To,</p>
+                    <p><strong>{{ student.full_name }}</strong></p>
+                    <p>{{ student.college|default:"Your College" }}</p>
+                    <p>{{ student.branch|default:"Your Branch" }} - {{ student.year|default:"Year" }} Year</p>
+                </div>
+
+                <div class="salutation">
+                    <p>Dear <strong>{{ student.full_name }}</strong>,</p>
+                </div>
+
+                <!-- Letter Body -->
+                <div class="letter-body">
+                    <p>
+                        <strong>Subject: Letter of Appointment for the position of {{ offer_letter.title }}</strong>
+                    </p>
+                    
+                    <p>
+                        We are pleased to offer you the position of <span class="offer-position">{{ offer_letter.title }}</span> 
+                        at <strong>Manac Infotech Pvt Ltd</strong>. We were highly impressed with your background, skills, 
+                        and interview performance. We believe you will be a valuable addition to our team and contribute 
+                        significantly to our organization's growth.
+                    </p>
+
+                    <p>
+                        This offer is contingent upon the successful completion of your current academic requirements and 
+                        verification of your credentials. Please find below the terms and conditions of your appointment:
+                    </p>
+
+                    <!-- Job Details Table -->
+                    <div class="job-details">
+                        <table class="job-details-table">
+                            <tr>
+                                <th>Position</th>
+                                <td>{{ offer_letter.title }}</td>
+                            </tr>
+                            <tr>
+                                <th>Company</th>
+                                <td>{{ offer_letter.company }}</td>
+                            </tr>
+                            <tr>
+                                <th>Start Date</th>
+                                <td>{{ offer_letter.start_date|date:"d M Y" }}</td>
+                            </tr>
+                            <tr>
+                                <th>Compensation (Monthly)</th>
+                                <td>₹{{ offer_letter.compensation|floatformat:2 }}</td>
+                            </tr>
+                            <tr>
+                                <th>Reporting To</th>
+                                <td>{{ offer_letter.reporting_to }}</td>
+                            </tr>
+                            <tr>
+                                <th>Work Location</th>
+                                <td>{{ offer_letter.location }}</td>
+                            </tr>
+                            <tr>
+                                <th>Employment Type</th>
+                                <td>Full-time Internship</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- Terms and Conditions -->
+                    <div class="section-header">Terms and Conditions</div>
+                    <ul class="terms-list">
+                        <li>The internship period will be for a minimum of 6 months, extendable based on performance.</li>
+                        <li>You will be required to sign the Company's Non-Disclosure Agreement (NDA) before joining.</li>
+                        <li>Your performance will be reviewed monthly during the internship period.</li>
+                        <li>The company reserves the right to terminate this appointment with 15 days notice in case of any misconduct or non-performance.</li>
+                        <li>You will be required to maintain regular attendance and complete all assigned tasks.</li>
+                        <li>All intellectual property created during the internship will be the sole property of the company.</li>
+                        <li>You must adhere to all company policies, code of conduct, and safety regulations.</li>
+                    </ul>
+
+                    <!-- Benefits -->
+                    <div class="section-header">Benefits & Perks</div>
+                    <div class="benefits-grid">
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Professional Training</span>
                         </div>
-                        <div>
-                            <div class="confidential-badge">CONFIDENTIAL</div>
-                            <div class="date-info"><strong>Date:</strong> {{ offer_letter.issued_date|date:"M d, Y" }}</div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Flexible Work Hours</span>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Certificate of Completion</span>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Performance Bonus</span>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Mentorship Program</span>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Project Exposure</span>
                         </div>
                     </div>
 
-                    <div class="letter-content">
-                        <p><strong>Dear {{ student.full_name }},</strong></p>
-                        <p>We are delighted to extend this offer of employment for the position of <strong>{{ offer_letter.title }}</strong> with {{ offer_letter.company }}. We were very impressed with your background and skills, and we are confident that you will make a significant contribution to our team.</p>
+                    <!-- Acceptance Section -->
+                    <div class="section-header">Acceptance</div>
+                    <div class="acceptance-section">
+                        <div class="acceptance-checkbox">
+                            <input type="checkbox" id="accept_terms" name="accept_terms">
+                            <label for="accept_terms" class="acceptance-text">
+                                I, <strong>{{ student.full_name }}</strong>, have read and understood the terms and conditions 
+                                of this appointment. I hereby accept the offer of employment as {{ offer_letter.title }} 
+                                at {{ offer_letter.company }} and agree to join on {{ offer_letter.start_date|date:"d M Y" }}.
+                                <br><br>
+                                I confirm that I will comply with all company policies and procedures during my employment.
+                            </label>
+                        </div>
+                    </div>
 
-                        <div class="offer-details">
-                            <div class="detail-item">
-                                <div class="detail-label">Start Date</div>
-                                <div class="detail-value">{{ offer_letter.start_date|date:"M d, Y" }}</div>
+                    <!-- Signature Section -->
+                    <div class="signature-section">
+                        <div class="signature-block">
+                            <div class="company-seal">
+                                Company<br>Seal
                             </div>
-                            <div class="detail-item">
-                                <div class="detail-label">Compensation</div>
-                                <div class="detail-value">₹{{ offer_letter.compensation }}/Month</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">Reporting To</div>
-                                <div class="detail-value">{{ offer_letter.reporting_to }}</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">Location</div>
-                                <div class="detail-value">{{ offer_letter.location }}</div>
-                            </div>
+                            <div class="signature-line"></div>
+                            <div class="signature-label">Authorized Signatory</div>
+                            <div class="signature-name">Manac Infotech Pvt Ltd</div>
+                            <div class="signature-title">HR Department</div>
                         </div>
 
-                        <p>Please review the attached document for full terms and conditions. By accepting this offer, you agree to the policies and procedures of our company.</p>
+                        <div class="signature-block">
+                            <div style="height: 100px;"></div>
+                            <div class="signature-line"></div>
+                            <div class="signature-label">Employee Signature</div>
+                            <div class="signature-name">{{ student.full_name }}</div>
+                            <div class="signature-title">Date: _____________</div>
+                        </div>
                     </div>
+                </div>
 
-                    <div class="action-buttons">
-                        <a href="{% url 'lms:download_offer_letter' %}" class="btn secondary">
-                            <i class="fas fa-download"></i> Download PDF
-                        </a>
-                    </div>
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <a href="{% url 'lms:download_offer_letter' %}" class="btn btn-secondary">
+                        <i class="fas fa-download"></i> Download PDF
+                    </a>
+                    {% if not offer_letter.is_accepted %}
+                    <button class="btn btn-success" onclick="acceptOffer()">
+                        <i class="fas fa-check"></i> Accept Offer
+                    </button>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Profile dropdown
-            const profileSection = document.getElementById('profile-section');
-            const profileDropdown = document.getElementById('profile-dropdown');
-
-            profileSection.addEventListener('click', function(e) {
-                e.stopPropagation();
-                profileDropdown.classList.toggle('show');
-            });
-
-            document.addEventListener('click', function() {
-                profileDropdown.classList.remove('show');
-            });
-
-            // Menu toggle
-            document.getElementById('menu-toggle').addEventListener('click', function() {
-                const sidebar = document.querySelector('.sidebar');
-                const mainContent = document.querySelector('.main-content');
-                sidebar.classList.toggle('hidden');
-                mainContent.classList.toggle('expanded');
-            });
-
-            // Sidebar navigation
-            document.querySelectorAll('.sidebar a').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    document.querySelectorAll('.sidebar a').forEach(l => l.classList.remove('active'));
-                    this.classList.add('active');
-                    window.location.href = this.href;
-                });
-            });
+        // Simple toggle for mobile sidebar
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.style.transform = sidebar.style.transform === 'translateX(-100%)' ? 'translateX(0)' : 'translateX(-100%)';
         });
 
-
+        // Function to accept offer
+        function acceptOffer() {
+            const checkbox = document.getElementById('accept_terms');
+            if (!checkbox.checked) {
+                alert('Please read and accept the terms and conditions by checking the box.');
+                return;
+            }
+            
+            if (confirm('Are you sure you want to accept this offer? This action cannot be undone.')) {
+                // In a real application, this would submit to the server
+                alert('Thank you for accepting the offer! Welcome to Manac Infotech Pvt Ltd.');
+                // Reload to show updated status
+                location.reload();
+            }
+        }
     </script>
 </body>
 </html>

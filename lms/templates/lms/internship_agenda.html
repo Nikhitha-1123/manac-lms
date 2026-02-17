@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Manac LMS Portal</title>
+    <title>Internship Agenda - Manac LMS Portal</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
@@ -40,9 +40,8 @@
         }
 
         @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
+            0%, 100% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
         }
 
         @keyframes floatingBubbles {
@@ -521,6 +520,159 @@
             margin-bottom: 10px;
         }
 
+        .agenda-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.1);
+        }
+
+        .agenda-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(102, 126, 234, 0.2);
+        }
+
+        .notes-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 253, 244, 0.9) 100%);
+            border: 3px solid rgba(34, 197, 94, 0.4);
+            box-shadow: 0 20px 40px rgba(34, 197, 94, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            border-radius: 18px;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notes-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #22c55e, #16a34a, #15803d);
+        }
+
+        .notes-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(34, 197, 94, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            border-color: rgba(34, 197, 94, 0.6);
+        }
+
+        .notes-header {
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+            color: #166534;
+            border-radius: 15px 15px 0 0;
+            border-bottom: 2px solid rgba(34, 197, 94, 0.2);
+        }
+
+        .notes-header h3 {
+            color: #166534;
+            font-weight: 800;
+        }
+
+        .notes-header h3 i {
+            color: #22c55e;
+        }
+
+        .responsibilities-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 251, 235, 0.9) 100%);
+            border: 3px solid rgba(245, 158, 11, 0.4);
+            box-shadow: 0 20px 40px rgba(245, 158, 11, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            border-radius: 18px;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .responsibilities-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #f59e0b, #d97706, #b45309);
+        }
+
+        .responsibilities-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(245, 158, 11, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            border-color: rgba(245, 158, 11, 0.6);
+        }
+
+        .responsibilities-header {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            color: #92400e;
+            border-radius: 15px 15px 0 0;
+            border-bottom: 2px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .responsibilities-header h3 {
+            color: #92400e;
+            font-weight: 800;
+        }
+
+        .responsibilities-header h3 i {
+            color: #f59e0b;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 20px 20px 0 0;
+            margin: -1.5rem -1.5rem 1rem -1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .card-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-header h3 i {
+            color: #feca57;
+            font-size: 1.1rem;
+        }
+
+        .agenda-section {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .agenda-section h4 {
+            color: #333;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .agenda-section h4 i {
+            color: #667eea;
+            font-size: 0.9rem;
+        }
+
+        .agenda-section p {
+            color: #555;
+            line-height: 1.6;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        .agenda-section:last-child {
+            margin-bottom: 0;
+        }
+
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -548,6 +700,18 @@
 
             .card {
                 padding: 1.5rem;
+            }
+
+            .agenda-card {
+                margin-bottom: 1rem;
+            }
+
+            .card-header h3 {
+                font-size: 1.1rem;
+            }
+
+            .agenda-section {
+                padding: 0.8rem;
             }
         }
     </style>
@@ -585,9 +749,9 @@
     <div class="container">
         <div class="sidebar">
             <ul>
-                <li data-tooltip="Dashboard"><a href="{% url 'lms:dashboard' %}" class="active"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+                <li data-tooltip="Dashboard"><a href="{% url 'lms:dashboard' %}"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
                 <li data-tooltip="Offer Letter"><a href="{% url 'lms:offer_letter' %}"><i class="fas fa-file-contract"></i> <span>Offer Letter</span></a></li>
-                <li data-tooltip="Internship Agenda"><a href="{% url 'lms:internship_agenda' %}"><i class="fas fa-calendar-check"></i> <span>Internship Agenda</span></a></li>
+                <li data-tooltip="Internship Agenda"><a href="{% url 'lms:internship_agenda' %}" class="active"><i class="fas fa-calendar-check"></i> <span>Internship Agenda</span></a></li>
                 <li data-tooltip="Session Details"><a href="{% url 'lms:session_details' %}"><i class="fas fa-calendar-alt"></i> <span>Session Details</span></a></li>
                 <li data-tooltip="Session Recordings"><a href="{% url 'lms:session_recordings' %}"><i class="fas fa-video"></i> <span>Session Recordings</span></a></li>
                 <li data-tooltip="Attendance"><a href="{% url 'lms:attendance' %}"><i class="fas fa-user-check"></i> <span>Attendance</span></a></li>
@@ -595,135 +759,68 @@
                 <li data-tooltip="Assessment"><a href="{% url 'lms:assessment' %}"><i class="fas fa-clipboard-check"></i> <span>Assessment</span></a></li>
                 <li data-tooltip="Study Material"><a href="{% url 'lms:study_material' %}"><i class="fas fa-book"></i> <span>Study Material</span></a></li>
                 <li data-tooltip="Certificate"><a href="{% url 'lms:certificate' %}"><i class="fas fa-certificate"></i> <span>Certificate</span></a></li>
-
-                <li data-tooltip="Placement Readiness"><a href="{% url 'lms:placement_readiness' %}"><i class="fas fa-chart-line"></i> <span>Placement Readiness</span></a></li>
+                <li data-t 0ooltip="Placement Readiness"><a href="{% url 'lms:placement_readiness' %}"><i class="fas fa-chart-line"></i> <span>Placement Readiness</span></a></li>
             </ul>
         </div>
 
         <div class="main-content" id="main-content">
             <div class="content-header">
-                <h2>Dashboard</h2>
-                <p style="color: #7f8c8d;">Welcome back, {{ user.get_full_name|default:user.username }}!</p>
+                <h2>Internship Agenda</h2>
             </div>
 
-            <!-- Stats Cards -->
-            <div class="dashboard-grid">
-                <div class="card stats-card">
-                    <h3><i class="fas fa-user-check" style="color: #667eea;"></i> Attendance</h3>
-                    <div class="stats-number">{{ attendance_percentage }}%</div>
-                    <div class="stats-label">Last 30 days</div>
-                </div>
-
-                <div class="card stats-card">
-                    <h3><i class="fas fa-clipboard-check" style="color: #28a745;"></i> Assessments</h3>
-                    <div class="stats-number">{{ completed_assessments }}/{{ total_assessments }}</div>
-                    <div class="stats-label">Completed</div>
-                </div>
-
-                <div class="card stats-card">
-                    <h3><i class="fas fa-video" style="color: #ffc107;"></i> Sessions</h3>
-                    <div class="stats-number">{{ attended_sessions }}</div>
-                    <div class="stats-label">Attended</div>
-                </div>
-            </div>
-
-            <!-- Content Cards Grid -->
             <div class="content-grid">
-                <!-- Upcoming Sessions -->
-                <div class="card small-card">
-                    <h3><i class="fas fa-calendar-alt" style="color: #007bff;"></i> Upcoming Sessions</h3>
-                    {% if upcoming_sessions %}
-                    <div style="display: grid; gap: 15px;">
-                        {% for session in upcoming_sessions %}
-                        <div style="display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid #f0f0f0;">
-                            <div style="background: #e3f2fd; color: #1976d2; padding: 8px 12px; border-radius: 8px; font-weight: bold; font-size: 0.9em; margin-right: 15px; text-align: center; min-width: 60px;">
-                                {{ session.date|date:"M d" }}
-                            </div>
-                            <div>
-                                <h4 style="margin: 0; color: #333; font-size: 16px;">{{ session.title }}</h4>
-                                <p style="margin: 5px 0 0; color: #666; font-size: 0.9em;">
-                                    <i class="far fa-clock"></i> {{ session.start_time }} - {{ session.end_time }} • {{ session.mentor }}
-                                </p>
-                            </div>
-                        </div>
-                        {% endfor %}
+                <!-- Agenda Cards for All Weeks -->
+                {% for item in agenda_items %}
+                <div class="card agenda-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-calendar-week"></i> {{ item.week }}</h3>
                     </div>
-                    {% else %}
-                    <div style="text-align: center; padding: 40px; color: #666;">
-                        <i class="fas fa-calendar-times" style="font-size: 48px; color: #ddd; margin-bottom: 15px;"></i>
-                        <p>No upcoming sessions</p>
-                    </div>
-                    {% endif %}
-                </div>
-
-                <!-- Progress Review -->
-                <div class="card small-card">
-                    <h3><i class="fas fa-chart-line" style="color: #28a745;"></i> Progress Review</h3>
-                    <div style="display: grid; gap: 20px;">
-                        <div>
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                <span style="font-weight: 600; color: #555;">HTML & CSS</span>
-                                <span style="color: #28a745; font-weight: bold;">95%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 95%;"></div>
-                            </div>
+                    <div class="card-body">
+                        <div class="agenda-section">
+                            <h4><i class="fas fa-tasks"></i> Agenda</h4>
+                            <p>{{ item.agenda|linebreaks }}</p>
                         </div>
-                        <div>
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                <span style="font-weight: 600; color: #555;">JavaScript</span>
-                                <span style="color: #ffc107; font-weight: bold;">80%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 80%; background: linear-gradient(90deg, #ffc107 0%, #ff8c00 100%);"></div>
-                            </div>
+                        {% if item.deliverables %}
+                        <div class="agenda-section">
+                            <h4><i class="fas fa-clipboard-check"></i> Student Deliverables</h4>
+                            <p>{{ item.deliverables|linebreaks }}</p>
                         </div>
-                        <div>
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                <span style="font-weight: 600; color: #555;">React JS</span>
-                                <span style="color: #17a2b8; font-weight: bold;">60%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 60%; background: linear-gradient(90deg, #17a2b8 0%, #138496 100%);"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Recent Activity -->
-                <div class="card small-card">
-                    <h3><i class="fas fa-history" style="color: #6f42c1;"></i> Recent Activity</h3>
-                    <ul style="list-style: none; padding: 0;">
-                        {% for project in recent_projects %}
-                        <li style="padding: 15px 0; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center;">
-                            <div style="background: #e8f5e9; color: #2e7d32; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
-                                <i class="fas fa-check"></i>
-                            </div>
-                            <div>
-                                <p style="margin: 0; font-weight: 600;">Submitted Project: {{ project.title }}</p>
-                                <small style="color: #888;">{{ project.submitted_at|timesince }} ago</small>
-                            </div>
-                        </li>
-                        {% endfor %}
-                        {% for session in recent_sessions %}
-                        <li style="padding: 15px 0; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center;">
-                            <div style="background: #e3f2fd; color: #1565c0; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
-                                <i class="fas fa-video"></i>
-                            </div>
-                            <div>
-                                <p style="margin: 0; font-weight: 600;">Attended Session: {{ session.session.title }}</p>
-                                <small style="color: #888;">{{ session.marked_at|timesince }} ago</small>
-                            </div>
-                        </li>
-                        {% endfor %}
-                        {% if not recent_projects and not recent_sessions %}
-                        <li style="text-align: center; padding: 40px; color: #666;">
-                            <i class="fas fa-inbox" style="font-size: 48px; color: #ddd; margin-bottom: 15px;"></i>
-                            <p>No recent activity</p>
-                        </li>
                         {% endif %}
-                    </ul>
+                    </div>
                 </div>
+                {% endfor %}
+
+                <!-- Notes Cards -->
+                {% for item in agenda_items %}
+                {% if item.notes %}
+                <div class="card notes-card">
+                    <div class="card-header notes-header">
+                        <h3><i class="fas fa-sticky-note"></i> Notes</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="agenda-section">
+                            <p>{{ item.notes|linebreaks }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+
+                <!-- Roles & Responsibilities Cards -->
+                {% for item in agenda_items %}
+                {% if item.responsibilities %}
+                <div class="card responsibilities-card">
+                    <div class="card-header responsibilities-header">
+                        <h3><i class="fas fa-user-cog"></i> Roles & Responsibilities</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="agenda-section">
+                            <p>{{ item.responsibilities|linebreaks }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
             </div>
         </div>
     </div>

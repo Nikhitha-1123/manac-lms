@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Student, Session, Attendance, Assessment, StudentAssessment, Project, StudyMaterial, Certificate, Notification
+from .models import Student, Session, Attendance, Assessment, StudentAssessment, Project, StudyMaterial, Certificate, Notification, InternshipAgenda
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
@@ -57,3 +57,10 @@ class NotificationAdmin(admin.ModelAdmin):
     list_display = ('student', 'title', 'is_read', 'created_at')
     list_filter = ('is_read', 'created_at')
     search_fields = ('student__user__username', 'student__full_name', 'title', 'message')
+
+@admin.register(InternshipAgenda)
+class InternshipAgendaAdmin(admin.ModelAdmin):
+    list_display = ('week', 'order')
+    list_filter = ('order',)
+    search_fields = ('week', 'agenda', 'deliverables')
+    ordering = ('order',)

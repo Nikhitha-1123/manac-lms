@@ -219,7 +219,7 @@ body::before {
 
 /* Sidebar Styles */
 .sidebar {
-    width: 120px;
+    width: 250px;
     position: fixed;
     top: 0;
     left: 0;
@@ -292,7 +292,7 @@ body::before {
     align-items: center;
     gap: 12px;
     padding: 16px 20px;
-    color: rgba(255, 255, 255, 0.9);
+    color: #333;
     text-decoration: none;
     border-radius: 15px;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -328,7 +328,7 @@ body::before {
 /* Main Content */
 .main-content {
     flex: 1;
-    margin-left: 140px;
+    margin-left: 270px;
     margin-top: 60px;
     padding: 30px 30px 30px 0px;
     transition: margin-left 0.3s ease;

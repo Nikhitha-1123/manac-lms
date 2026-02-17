@@ -6,7 +6,7 @@ from django.http import JsonResponse, HttpResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 from django.db import models
-from .models import Student, Session, Attendance, Assessment, StudentAssessment, Project, StudyMaterial, Certificate, Notification, OfferLetter, MockTest, StudentMockTest, MockInterview
+from .models import Student, Session, Attendance, Assessment, StudentAssessment, Project, StudyMaterial, Certificate, Notification, OfferLetter, MockTest, StudentMockTest, MockInterview, InternshipAgenda
 import json
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -587,6 +587,12 @@ def cancel_mock_interview(request, interview_id):
         return JsonResponse({'success': True, 'message': 'Mock interview request cancelled successfully!'})
 
     return JsonResponse({'success': False, 'message': 'Invalid request method.'})
+
+@login_required
+def internship_agenda(request):
+    agenda_items = InternshipAgenda.objects.all()
+    context = {'agenda_items': agenda_items}
+    return render(request, 'lms/internship_agenda.html', context)
 
 @login_required
 def download_offer_letter(request):
